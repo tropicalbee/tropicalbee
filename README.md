@@ -3,10 +3,10 @@
 <!-- Keep this stack free of paragraphs and blank lines between sections. -->
 <div align="center">
 <div>
-  <a href="tropicalbee-halloween-banner-kit/game/start.md">
+  <a href="tropicalbee-halloween-banner-kit/game/start.md" title="Enter the House — play the adventure">
     <picture>
       <source media="(prefers-reduced-motion: reduce)" srcset="tropicalbee-halloween-banner-kit/assets/tropicalbee-halloween-preview.png">
-      <img src="tropicalbee-halloween-banner-kit/assets/tropicalbee-halloween-animated.gif" width="1024" align="top" alt="tropicalbee — Come in. Mind the spiders. Click to enter the house and play the adventure.">
+      <img src="tropicalbee-halloween-banner-kit/assets/tropicalbee-halloween-animated.gif" width="1024" align="top" alt="tropicalbee — Come in. Mind the spiders. Click the ENTER THE HOUSE sign in this banner to play.">
     </picture>
   </a>
 </div>
@@ -41,8 +41,6 @@
 </div>
 
 <p align="center">
-  <a href="tropicalbee-halloween-banner-kit/game/start.md">Enter the house</a>
-  &nbsp;&middot;&nbsp;
   <a href="https://github.com/tropicalbee?tab=repositories">Explore my repositories</a>
 </p>
 
@@ -59,5 +57,5 @@
   </ul>
   <p><strong>Projects:</strong> still brewing in my garage..</p>
   <p><strong>The Ghost Miner:</strong> a nightly snapshot of my public GitHub contribution calendar. Slate is an inactive day; copper and amber mark activity. The ghost mines each active day once before the loop resets.</p>
-  <p><strong>The house:</strong> a small adventure. Follow the choices, find the brass key, and see where the night takes you.</p>
+  <p><strong>The house:</strong> click the signboard in the entrance banner to play Midnight at the Garage. Explore two chapters, solve seven puzzles, find a companion, and discover six endings. Beyond the garden, a greenhouse, cellar, workshop and observatory hide the nightkeeper's unfinished story.</p>
 </details>

@@ -70,8 +70,53 @@ not a live widget.
   `prefers-reduced-motion` media query. Still alternatives are larger than GIFs.
 - Alternative text describes every image. The expandable text profile keeps
   the bio and stack readable without relying on pixel lettering.
-- The banner opens the house adventure; all four return links lead to the root
-  profile README. Projects links to the account's repositories.
+- The signboard inside the first banner opens the house adventure. The whole
+  banner shares that link, including the sign; no separate entrance link is
+  shown below the profile. Every game page can return to the root README.
+  Projects links to the account's repositories.
+
+## The house adventure
+
+**Midnight at the Garage** is a GitHub-native adventure with 96 game states,
+two chapters, seven puzzles and six endings. Each page carries its key,
+companion, equipment and puzzle progress. Bookmark a page to resume; Restart
+begins again. There is no login, backend, installation or timer.
+
+The original house offers a shorter escape. Choose **FOLLOW THE LANTERNS** at
+the garden gate to begin the longer chapter. Explore the greenhouse, flooded
+cellar, workshop and observatory; grow a moonseed, restore a pump, assemble a
+lantern, find the sky bearing and repair the beacon. Optional notes tell the
+nightkeeper's story. A collapsible map and repair journal accompany the journey.
+Both the solo and cat-companion routes can reach either new ending.
+
+The room artwork is shared across pages, with separate open-chest and cat/no-cat
+variants. Only the visited room and small SVG interface assets load during play;
+the profile still loads its original five GIFs. All ten adventure illustrations live
+in `tropicalbee-halloween-banner-kit/assets/adventure/`.
+
+The existing banner already contains its wooden ENTER THE HOUSE sign. Its link
+is on the containing image, like the image entry in
+[DoomMe](https://github.com/Kuberwastaken/DoomMe). This implementation uses
+original artwork and its own story and game states.
+
+Edit `tropicalbee-halloween-banner-kit/source/adventure.mjs` for the house and
+ending guide, or `source/adventure-expansion.mjs` in that kit for chapter two.
+Regenerate the committed Markdown pages, interface assets and local preview:
+
+```sh
+node tropicalbee-halloween-banner-kit/source/render-adventure.mjs --preview
+```
+
+Open `preview.html` yourself and click the signboard. Its local link opens a
+playable HTML preview with all choices. The preview files are ignored by Git;
+GitHub uses the committed Markdown pages directly. No browser was launched
+during preparation. Do not substitute a local preview URL in the root README.
+
+The built-in image-generation tool produced the ten illustrations. Exact
+generation/edit prompts are saved in `source/adventure-art-prompts.json` and
+`source/adventure-art-edits.json`; the four new room prompts are in
+`source/adventure-expansion-art-prompts.json` inside the banner kit. You do not need image
+generation, an API key or npm dependencies to regenerate the game's interface.
 
 `preview.html` is an optional local visual preview. Open it yourself after
 extracting the package. It approximates GitHub's content width; GitHub's actual
@@ -89,6 +134,8 @@ These checks need only Python and Node, with no package installation:
 python scripts/check-profile.py
 node ghost-miner-kit/source/check-route.mjs
 node ghost-miner-kit/source/check-labels.mjs
+node tropicalbee-halloween-banner-kit/source/check-adventure.mjs
+node tropicalbee-halloween-banner-kit/source/render-adventure.mjs --check
 ```
 
 A full miner rebuild additionally needs FFmpeg and the kit's `sharp` dependency.

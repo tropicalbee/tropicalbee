@@ -1,0 +1,15 @@
+{
+  "method": "Built-in image_gen",
+  "edits": [
+    {
+      "target": "assets/adventure/attic-cat.png",
+      "output": "assets/adventure/attic.png",
+      "prompt": "Use case: precise-object-edit. Edit target: the provided attic game scene. Change ONLY one thing: remove the black cat sitting on the center-right floor near the trunk and seamlessly restore the wood floor/trunk background behind it. Keep everything else unchanged: exact composition, image dimensions, pixel-art texture and palette, ghost, tea cups, snowflake/sun/leaf bells, doors, window, lights, all furniture. No replacement animal. No new text. This is the same room before the player befriends the cat."
+    },
+    {
+      "target": "assets/adventure/study.png",
+      "output": "assets/adventure/study-open.png",
+      "prompt": "Use case: precise-object-edit. Edit target: the provided study game scene. Change ONLY the central puzzle chest: its lid is now raised open, hinged at the back, showing an EMPTY dark wooden interior because the player has taken the key. Preserve all three carved symbols on its FRONT exactly: moon, pumpkin, spider. Keep the exact image dimensions, camera, lighting, all surrounding furniture, parchment, books, candles, pixel-art texture, and colors unchanged. No new objects, no key in the chest, no text. This is the same room after solving its puzzle."
+    }
+  ]
+}

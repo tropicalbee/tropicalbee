@@ -22,6 +22,14 @@ Replacing `source/background.png` requires updating positions, light boxes, sign
 
 ## Adventure
 
-The game is a small linked Markdown exploration puzzle. Visitors follow choices between pages to investigate the house, find a key and reach the ending. Browser Back behaves normally; this is not a stateful arcade game. Room drawings are editable SVGs in `assets`.
+The game is **Midnight at the Garage**, a linked Markdown adventure with 96 game states, two chapters, seven puzzles and six endings. Visitors explore the foyer, solve the study chest, unlock the attic and choose a seasonal bell. The garden offers the original shorter endings or a longer route through the greenhouse, cellar, workshop and observatory. Five more puzzles restore the nightkeeper's beacon. Befriending the cat after finding the key unlocks a companion route; the companion and collected equipment are retained on every subsequent choice.
+
+The ten finished illustrations are in `assets/adventure/`, including an open chest, attic variants with and without the cat, and four new chapter-two rooms. Small SVG title/inventory panels and wooden controls are in `assets/adventure/ui/`. A collapsible map and repair journal help players follow the longer quest. The original schematic SVG rooms remain in the kit but the game no longer embeds them.
+
+Edit `source/adventure.mjs` for chapter one and the ending guide; edit `source/adventure-expansion.mjs` for chapter two. Run `node source/render-adventure.mjs` to regenerate the pages and interface. `node source/check-adventure.mjs` checks all routes, puzzle rewards, retry paths and inventory rules; `node source/render-adventure.mjs --check` checks that committed pages match their source. Both commands need only Node.
+
+For a playable local preview, run `node source/render-adventure.mjs --preview`, then open the repository's root `preview.html` yourself. Clicking the banner opens the preview game. GitHub uses the Markdown files instead, with no website deployment or JavaScript required.
+
+Each URL encodes one complete state, so bookmarking the page preserves progress and browser Back revisits an earlier state. Restart begins a new run. The ending collection is a spoiler guide, not a saved achievement counter.
 
 This is the entrance section only. The Resident and tech-stack sections are separate assets; this kit does not replace those sections. Nothing has been published or written to GitHub.

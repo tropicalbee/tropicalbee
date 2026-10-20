@@ -5,7 +5,10 @@
   "type": "module",
   "license": "MIT",
   "scripts": {
-    "render": "node source/render-banner.mjs"
+    "render": "node source/render-banner.mjs",
+    "render:game": "node source/render-adventure.mjs",
+    "preview:game": "node source/render-adventure.mjs --preview",
+    "check:game": "node source/check-adventure.mjs && node source/render-adventure.mjs --check"
   },
   "dependencies": {
     "sharp": "0.35.5"

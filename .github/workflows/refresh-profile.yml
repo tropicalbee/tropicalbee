@@ -50,6 +50,10 @@ jobs:
         working-directory: .
         run: python scripts/check-profile.py
 
+      - name: Check the house adventure
+        working-directory: tropicalbee-halloween-banner-kit
+        run: npm run check:game
+
       - name: Fetch and validate the public calendar
         run: python source/fetch-calendar.py
 
