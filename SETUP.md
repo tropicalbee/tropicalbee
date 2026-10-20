@@ -77,22 +77,31 @@ not a live widget.
 
 ## The house adventure
 
-**Midnight at the Garage** is a GitHub-native adventure with 96 game states,
+**The Thirteenth Knock** is a Halloween horror adventure with 96 game states,
 two chapters, seven puzzles and six endings. Each page carries its key,
 companion, equipment and puzzle progress. Bookmark a page to resume; Restart
 begins again. There is no login, backend, installation or timer.
 
-The original house offers a shorter escape. Choose **FOLLOW THE LANTERNS** at
-the garden gate to begin the longer chapter. Explore the greenhouse, flooded
-cellar, workshop and observatory; grow a moonseed, restore a pump, assemble a
-lantern, find the sky bearing and repair the beacon. Optional notes tell the
-nightkeeper's story. A collapsible map and repair journal accompany the journey.
-Both the solo and cat-companion routes can reach either new ending.
+Briar House appears every October 31. Mother Hollow steals her guests' names
+and keeps them in jack-o'-lanterns; Elias, the captive caretaker, can only warn
+visitors indirectly. The story uses supernatural dread and implied danger.
+The knocking is narrative, not a real-time countdown.
+
+The house offers a shorter escape. Choose **FOLLOW THE LANTERNS** at the garden
+gate to attempt a rescue. Explore the greenhouse, flooded cellar, workshop and
+observatory to rebuild the beacon ward. Optional notes reveal the failed
+Halloween vigil and the invitation that let Mother Hollow inside. A collapsible
+map and ward journal track the clues. Both solo and cat-companion routes can
+reach the final choice: take the freed names home, or remain as October's keeper.
+The six endings include escape, capture, transformation, rescue and sacrifice.
 
 The room artwork is shared across pages, with separate open-chest and cat/no-cat
 variants. Only the visited room and small SVG interface assets load during play;
-the profile still loads its original five GIFs. All ten adventure illustrations live
-in `tropicalbee-halloween-banner-kit/assets/adventure/`.
+the profile still loads its original five GIFs. The eleven active adventure
+illustrations live in `tropicalbee-halloween-banner-kit/assets/adventure/night/`.
+They use dark spruce, grey stone, coarse block textures, cool night shadows and
+small pools of pumpkin light. Grey beveled stone controls match the rooms.
+Earlier illustrations remain in `assets/adventure/` but are not loaded by the game.
 
 The existing banner already contains its wooden ENTER THE HOUSE sign. Its link
 is on the containing image, like the image entry in
@@ -112,11 +121,12 @@ playable HTML preview with all choices. The preview files are ignored by Git;
 GitHub uses the committed Markdown pages directly. No browser was launched
 during preparation. Do not substitute a local preview URL in the root README.
 
-The built-in image-generation tool produced the ten illustrations. Exact
-generation/edit prompts are saved in `source/adventure-art-prompts.json` and
-`source/adventure-art-edits.json`; the four new room prompts are in
-`source/adventure-expansion-art-prompts.json` inside the banner kit. You do not need image
-generation, an API key or npm dependencies to regenerate the game's interface.
+The built-in image-generation tool produced the room illustrations. These are
+generated Minecraft-inspired scenes, not captures from Minecraft. The current
+direction and exact prompts are in `source/adventure-night-art-direction.md`
+and `source/adventure-night-art-prompts.json` inside the banner kit. Earlier
+prompt sets remain alongside them. You do not need image generation, an API key
+or npm dependencies to regenerate the game's interface.
 
 `preview.html` is an optional local visual preview. Open it yourself after
 extracting the package. It approximates GitHub's content width; GitHub's actual

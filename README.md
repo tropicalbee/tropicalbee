@@ -57,5 +57,5 @@
   </ul>
   <p><strong>Projects:</strong> still brewing in my garage..</p>
   <p><strong>The Ghost Miner:</strong> a nightly snapshot of my public GitHub contribution calendar. Slate is an inactive day; copper and amber mark activity. The ghost mines each active day once before the loop resets.</p>
-  <p><strong>The house:</strong> click the signboard in the entrance banner to play Midnight at the Garage. Explore two chapters, solve seven puzzles, find a companion, and discover six endings. Beyond the garden, a greenhouse, cellar, workshop and observatory hide the nightkeeper's unfinished story.</p>
+  <p><strong>The house:</strong> click the signboard in the entrance banner to play The Thirteenth Knock. Every Halloween, Briar House returns to steal another name. Explore two chapters, solve seven puzzles, and uncover six endings as you discover what its caretaker invited inside.</p>
 </details>
