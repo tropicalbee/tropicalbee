@@ -1,0 +1,45 @@
+# Installed dependencies and intermediate render frames
+**/node_modules/
+**/build/
+**/.cache/
+
+# Python environments and caches
+**/__pycache__/
+*.py[cod]
+**/.venv/
+**/venv/
+**/.pytest_cache/
+**/.mypy_cache/
+**/.ruff_cache/
+
+# Download packages and local visual preview
+*.zip
+/preview.html
+
+# Logs and temporary editor files
+*.log
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+
+# Local editor settings
+.vscode/
+.idea/
+*.code-workspace
+
+# Operating system metadata
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Local environment values; keep reusable examples
+.env
+.env.*
+!.env.example
+!.env.template
+
+# Keep README assets, still-image alternatives, game pages, source artwork,
+# renderer scripts, configs, calendar data, licenses and package lockfiles.
+# The profile and nightly workflow depend on these files.
