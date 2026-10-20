@@ -1,0 +1,9 @@
+{
+  "description": "Nearest-first route measured on the bundled tropicalbee calendar before optimisation.",
+  "activeDays": 63,
+  "moveSteps": 122,
+  "repeatedEdges": 12,
+  "turns": 44,
+  "immediateBacktracks": 6,
+  "calendarDaysSha256": "18b6ed0291140b2126a135134505c08990ce36efb76ce509f5b5c66e5f721cc6"
+}

@@ -1,0 +1,97 @@
+name: Refresh profile contributions
+
+on:
+  schedule:
+    # 18:30 UTC = 00:00 Asia/Kolkata (IST), every night.
+    - cron: "30 18 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: profile-contributions
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    # Prevent a fork or a manual run on another branch from publishing.
+    if: github.repository == 'tropicalbee/tropicalbee' && github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    permissions:
+      contents: write
+    defaults:
+      run:
+        shell: bash
+        working-directory: ghost-miner-kit
+    env:
+      PYTHONDONTWRITEBYTECODE: "1"
+
+    steps:
+      - name: Read the default branch
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+          clean: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+
+      - name: Set up Node
+        uses: actions/setup-node@v7
+        with:
+          node-version: "24"
+          package-manager-cache: false
+
+      - name: Check local profile links
+        working-directory: .
+        run: python scripts/check-profile.py
+
+      - name: Fetch and validate the public calendar
+        run: python source/fetch-calendar.py
+
+      - name: Check routes and month labels
+        run: npm run check
+
+      - name: Install the miner renderer
+        # The other four sections are already rendered and need no daily rebuild.
+        run: npm install --no-package-lock --no-audit --no-fund
+
+      - name: Install FFmpeg on the runner if needed
+        run: |
+          if ! command -v ffmpeg >/dev/null 2>&1; then
+            sudo apt-get update
+            sudo apt-get install --no-install-recommends -y ffmpeg
+          fi
+          ffmpeg -version
+
+      - name: Render the contribution animation
+        run: npm run render
+
+      - name: Validate the assembled profile
+        working-directory: .
+        run: python scripts/check-profile.py
+
+      - name: Save refreshed contribution assets
+        working-directory: .
+        env:
+          DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -- \
+            ghost-miner-kit/data/calendar.json \
+            ghost-miner-kit/data/mining-route.json \
+            ghost-miner-kit/data/month-labels.json \
+            ghost-miner-kit/assets/ghost-miner.gif \
+            ghost-miner-kit/assets/ghost-miner-preview.png \
+            ghost-miner-kit/assets/ghost-miner-preview.svg
+          if git diff --cached --quiet; then
+            echo "No contribution changes to publish."
+            exit 0
+          fi
+          git commit -m "chore(profile): refresh contribution animation"
+          git push origin "HEAD:${DEFAULT_BRANCH}"

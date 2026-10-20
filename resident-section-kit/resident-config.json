@@ -1,0 +1,10 @@
+{
+  "title": "THE RESIDENT",
+  "bioLines": [
+    "building something pretty useless in my garage.",
+    "sometimes it even works."
+  ],
+  "roomAsset": "source/room-background.png",
+  "animateEyes": true,
+  "animateLights": true
+}

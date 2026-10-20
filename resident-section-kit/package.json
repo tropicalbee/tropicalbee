@@ -1,0 +1,13 @@
+{
+  "name": "minecraft-halloween-resident",
+  "version": "0.2.1",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "scripts": {
+    "render": "node source/render-resident.mjs"
+  },
+  "dependencies": {
+    "sharp": "0.35.5"
+  }
+}

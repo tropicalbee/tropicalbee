@@ -1,0 +1,134 @@
+{
+  "framesPerSecond": 12.5,
+  "animateLights": true,
+  "rows": [
+    {
+      "title": "LANGUAGES",
+      "items": [
+        {
+          "label": "Python",
+          "icon": "python",
+          "iconPath": "source/pixel-icons/python.png"
+        },
+        {
+          "label": "C++",
+          "icon": "cplusplus",
+          "iconPath": "source/pixel-icons/cplusplus.png"
+        },
+        {
+          "label": "HTML",
+          "icon": "html",
+          "iconPath": "source/pixel-icons/html.png"
+        },
+        {
+          "label": "CSS",
+          "icon": "css",
+          "iconPath": "source/pixel-icons/css.png"
+        }
+      ]
+    },
+    {
+      "title": "FRAMEWORKS",
+      "items": [
+        {
+          "label": "PyTorch",
+          "icon": "pytorch",
+          "iconPath": "source/pixel-icons/pytorch.png"
+        },
+        {
+          "label": "FastAPI",
+          "icon": "fastapi",
+          "iconPath": "source/pixel-icons/fastapi.png"
+        },
+        {
+          "label": "Streamlit",
+          "icon": "streamlit",
+          "iconPath": "source/pixel-icons/streamlit.png"
+        },
+        {
+          "label": "scikit-learn",
+          "icon": "sklearn",
+          "iconPath": "source/pixel-icons/sklearn.png"
+        },
+        {
+          "label": "LangChain",
+          "icon": "langchain",
+          "iconPath": "source/pixel-icons/langchain.png"
+        },
+        {
+          "label": "LangGraph",
+          "icon": "langgraph",
+          "iconPath": "source/pixel-icons/langgraph.png"
+        }
+      ]
+    },
+    {
+      "title": "DATABASES",
+      "items": [
+        {
+          "label": "Firebase",
+          "icon": "firebase",
+          "iconPath": "source/pixel-icons/firebase.png"
+        },
+        {
+          "label": "ChromaDB",
+          "icon": "chromadb",
+          "iconPath": "source/pixel-icons/chromadb.png"
+        },
+        {
+          "label": "Supabase",
+          "icon": "supabase",
+          "iconPath": "source/pixel-icons/supabase.png"
+        }
+      ]
+    },
+    {
+      "title": "TOOLS",
+      "items": [
+        {
+          "label": "Git",
+          "icon": "git",
+          "iconPath": "source/pixel-icons/git.png"
+        },
+        {
+          "label": "GitHub",
+          "icon": "github",
+          "iconPath": "source/pixel-icons/github.png"
+        },
+        {
+          "label": "Docker",
+          "icon": "docker",
+          "iconPath": "source/pixel-icons/docker.png"
+        },
+        {
+          "label": "VS Code",
+          "icon": "vscode",
+          "iconPath": "source/pixel-icons/vscode.png"
+        },
+        {
+          "label": "Jupyter",
+          "icon": "jupyter",
+          "iconPath": "source/pixel-icons/jupyter.png"
+        }
+      ]
+    },
+    {
+      "title": "AI ASSISTANTS",
+      "items": [
+        {
+          "label": "Codex",
+          "icon": "codex",
+          "iconPath": "source/pixel-icons/codex.png"
+        },
+        {
+          "label": "Antigravity",
+          "icon": "antigravity",
+          "iconPath": "source/pixel-icons/antigravity.png"
+        }
+      ]
+    }
+  ],
+  "animateGhost": true,
+  "animateSpider": true,
+  "animateCobwebs": true
+}

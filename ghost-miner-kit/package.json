@@ -1,0 +1,9 @@
+{
+  "name": "minecraft-ghost-miner-preview",
+  "version": "0.4.0",
+  "type": "module",
+  "license": "MIT",
+  "engines": {"node": ">=20.9.0"},
+  "scripts": {"fetch":"python3 source/fetch-calendar.py","render":"node source/render-miner.mjs","update":"npm run fetch && npm run render","check":"node source/check-route.mjs && node source/check-labels.mjs"},
+  "dependencies": {"sharp":"0.35.5"}
+}

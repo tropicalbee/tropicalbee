@@ -1,0 +1,2 @@
+const spiderShape=`<g fill="none" stroke="#404043" stroke-width="4" stroke-linejoin="miter"><path d="M-8 -4H-16V-10H-22V-15M-9 1H-19V-4H-25M-8 5H-18V10H-24V16M-6 9H-12V18H-16M8 -4H16V-10H22V-15M9 1H19V-4H25M8 5H18V10H24V16M6 9H12V18H16"/></g><rect x="-11" y="-11" width="22" height="18" fill="#252527"/><path d="M-9 -11H9V-7H-9ZM-11 -7H-7V3H-11Z" fill="#505052"/><rect x="-9" y="5" width="18" height="11" fill="#121214"/><rect x="-7" y="8" width="4" height="4" fill="#ff2020"/><rect x="3" y="8" width="4" height="4" fill="#ff2020"/>`;
+export {spiderShape};
