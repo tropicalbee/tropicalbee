@@ -2,17 +2,22 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {loadSharp,encodeGifFrames} from '../../scripts/profile-render-utils.mjs';
-import {pixelText} from '../../garage-section-kit/source/pixel-font.mjs';
+import {pixelText,textWidth} from '../../garage-section-kit/source/pixel-font.mjs';
+import {visitorLabel} from './visitor-label.mjs';
 
 const sharp=loadSharp(import.meta.url);
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const out=path.join(root,'assets');
 await fs.mkdir(out,{recursive:true});
 const W=1024,H=410,FPS=12.5,N=100;
+const snapshot=JSON.parse(await fs.readFile(path.join(root,'data/visitors.json'),'utf8'));
+const label=visitorLabel(snapshot);
 const background=await sharp(path.join(root,'source/gate-original.png')).resize(W,H,{fit:'fill',kernel:'nearest'}).png().toBuffer();
 const raw=await sharp(background).removeAlpha().raw().toBuffer();
 const fixed=`<image width="${W}" height="${H}" href="data:image/png;base64,${background.toString('base64')}"/>`+
- pixelText('THE TRESPASS REGISTER',675,137,2.8,'#c9c9b8',true)+pixelText('Something followed you in.',675,180,1.5,'#b4b7a6',true);
+ pixelText('THE TRESPASS REGISTER',675,128,2.4,'#c9c9b8',true)+
+ pixelText(label,675,158,Math.min(2.5,320/textWidth(label,1)),'#c2a77c',true)+
+ pixelText('Something followed you in.',675,192,1.3,'#b4b7a6',true);
 
 const steps=[[260,390],[277,365],[258,341],[275,317],[266,293],[278,269]];
 const clamp=v=>Math.max(0,Math.min(1,v));
@@ -35,7 +40,7 @@ function motion(t,animated=false){
  return `<g shape-rendering="crispEdges">${footprints}<g class="${animated?'watcher':''}" opacity="${eyes(t).toFixed(3)}"><rect x="270" y="210" width="3" height="2" fill="#985c43"/><rect x="281" y="210" width="3" height="2" fill="#985c43"/></g><defs><clipPath id="lantern-core">${mask}</clipPath></defs><g clip-path="url(#lantern-core)"><rect class="${animated?'lantern':''}" x="${box[0]}" y="${box[1]}" width="${box[2]}" height="${box[3]}" fill="#38291c" opacity="${flame(t).toFixed(3)}"/></g></g>`;
 }
 function svg(t,animated=false,layer='full'){
- return `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" role="img" aria-labelledby="title desc"><title id="title">The Trespass Register</title><desc id="desc">An abandoned cemetery checkpoint. Footprints appear one by one on the stone path although nobody is visible. A hanging lantern flickers, then two eyes briefly watch from the dark entrance. The wooden register sign stays still. The live profile-view count is displayed separately beneath this scene.</desc>${animated?`<style>${css}</style>`:''}${layer!=='motion'?fixed:''}${layer!=='static'?motion(t,animated):''}</svg>`;
+ return `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" role="img" aria-labelledby="title desc"><title id="title">The Trespass Register</title><desc id="desc">An abandoned cemetery checkpoint. Footprints appear one by one on the stone path although nobody is visible. A hanging lantern flickers, then two eyes briefly watch from the dark entrance. The sign shows ${label}. The profile-view snapshot refreshes every twelve hours; it does not count unique people.</desc>${animated?`<style>${css}</style>`:''}${layer!=='motion'?fixed:''}${layer!=='static'?motion(t,animated):''}</svg>`;
 }
 await fs.writeFile(path.join(out,'trespass-register.svg'),svg(0,true));
 await sharp(Buffer.from(svg(0))).png().toFile(path.join(out,'trespass-register-preview.png'));

@@ -4,6 +4,7 @@ from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import unquote, urlsplit, parse_qs
 import re
+import json
 import struct
 import xml.etree.ElementTree as ET
 
@@ -22,7 +23,8 @@ class References(HTMLParser):
             if attrs.get(key):
                 self.paths.append(attrs[key])
         if tag == "img":
-            if not attrs.get("alt", "").strip():
+            decorative = attrs.get("alt") == "" and attrs.get("width") == "1" and attrs.get("height") == "1"
+            if not attrs.get("alt", "").strip() and not decorative:
                 raise ValueError("An image is missing alternative text")
             self.images.append(attrs)
 
@@ -90,13 +92,27 @@ def main():
         raise ValueError("Expected one profile view counter beneath the illustrations")
     counter = urlsplit(counters[0]["src"])
     if (counter.scheme != "https" or counter.netloc != "komarev.com" or counter.path != "/ghpvc/"
-            or parse_qs(counter.query) != {"username": ["tropicalbee"], "label": ["Trespasses recorded"],
-                                           "color": ["79644d"], "style": ["flat-square"]}):
+            or parse_qs(counter.query) != {"username": ["tropicalbee"], "style": ["pixel"]}):
         raise ValueError("Unexpected counter configuration")
+    if any(counters[0].get(key) != value for key, value in {"width": "1", "height": "1", "alt": ""}.items()):
+        raise ValueError("The request counter must be a decorative 1 by 1 image")
     if profile_images[-1] != counters[0]:
         raise ValueError("The counter must follow the six illustrated sections")
     if section_images[-1]["src"] != "trespass-section-kit/assets/trespass-register.gif":
         raise ValueError("The counter must belong to the Trespass Register scene")
+    snapshot = json.loads((ROOT / "trespass-section-kit/data/visitors.json").read_text(encoding="utf-8"))
+    count = snapshot.get("count")
+    if snapshot.get("username") != "tropicalbee":
+        raise ValueError("Unexpected visitor snapshot account")
+    if count is None and snapshot.get("fetchedAt") is None:
+        label = "AWAITING FIRST COUNT"
+    elif type(count) is int and 0 <= count <= 9_007_199_254_740_991 and snapshot.get("fetchedAt"):
+        label = f"RECORDED {count:06d}"
+    else:
+        raise ValueError("Invalid saved visitor snapshot")
+    register = ET.parse(ROOT / "trespass-section-kit/assets/trespass-register.svg")
+    if not any(node.get("aria-label") == label for node in register.iter()):
+        raise ValueError("Register lettering does not match the saved count; rebuild the scene")
     for img in section_images:
         if img.get("width") != "1024":
             raise ValueError("Profile sections must share a consistent display width")

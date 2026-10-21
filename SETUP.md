@@ -3,7 +3,7 @@
 The root `README.md` combines six sections: entrance, resident, tech stack,
 projects, contribution miner and the Trespass Register. The original five
 scenes retain their animation and continuous layout. The separate cemetery
-footer gives the live visitor counter its own setting.
+footer embeds a saved visitor count directly in its wooden sign.
 
 Bats fly, leaves fall, ghosts bob, spiders crawl and descend, and pumpkin lights
 flicker. The garage contains the original brewer, potion bubbles, steam and
@@ -21,36 +21,37 @@ month, without removing any contribution days.
    Do not put everything inside an extra enclosing folder.
 3. Review and commit the files yourself, then push them to the default branch.
    This package has not been published or connected to your account.
-4. Open **Actions → Refresh profile contributions → Run workflow**, select the
+4. Open **Actions → Refresh profile snapshots → Run workflow**, select the
    default branch, and run it once to verify your repository's configuration.
-5. Confirm the run succeeds and saves a `chore(profile): refresh contribution
-   animation` commit. The nightly schedule then runs automatically.
+5. Confirm the run succeeds and saves a `chore(profile): refresh profile
+   snapshots` commit. The schedules then run automatically.
 
 See GitHub's [profile README requirements](https://docs.github.com/en/account-and-profile/how-tos/profile-customization/managing-your-profile-readme).
 
-## Midnight update
+## Midnight and noon updates
 
 The workflow is `.github/workflows/refresh-profile.yml`.
 
 | Setting | Value |
 | --- | --- |
-| Local time | Every night at **00:00 Asia/Kolkata (India Standard Time)** |
-| UTC cron | `30 18 * * *` |
+| Local time | Register at **00:00 and 12:00 Asia/Kolkata (India Standard Time)**; miner at midnight only |
+| UTC cron | `30 18 * * *` (midnight) and `30 6 * * *` (noon) |
 | Manual trigger | `workflow_dispatch`, on the default branch |
 | Account | `tropicalbee`, from `ghost-miner-kit/miner-config.json` |
-| Data | GitHub's public contribution calendar |
+| Data | GitHub's public contribution calendar and Komarev's profile-view counter |
 | Credentials | Built-in `GITHUB_TOKEN`; no personal token or API key needed |
 
-GitHub may queue scheduled jobs, so midnight is the requested trigger time,
-not a guaranteed completion time. Schedules run from the default branch.
+GitHub may queue scheduled jobs, so these are requested trigger times,
+not guaranteed completion times. Schedules run from the default branch.
 GitHub can disable scheduled workflows in public repositories after 60 days
 without repository activity; re-enable the workflow in Actions if this occurs.
 See [GitHub's schedule documentation](https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#schedule).
 
-The job checks local links, fetches and validates the calendar, runs route and
-month-label checks, then renders the miner GIF and still previews. Only the
-three calendar/route JSON files and three finished miner assets are staged.
-The other five illustrations stay pre-rendered, saving daily render time.
+The job checks local links, game pages and counter fixtures. At midnight (or on
+a manual run), it fetches the public calendar and rebuilds the miner. Every run
+fetches a validated visitor snapshot and rebuilds the register GIF, PNG and SVG.
+The four other illustrations stay pre-rendered. Only the miner's six generated
+files and the register's JSON snapshot and three finished assets are staged.
 The original route baseline remains unchanged.
 
 The prepared workflow commits and pushes those generated files when you
@@ -68,8 +69,8 @@ not a live widget.
 ## Loading and accessibility
 
 - All scene illustrations and room images are stored in the repository.
-  The visitor badge loads from Komarev;
-  the six scenes and game remain available if that external badge fails.
+  An invisible 1 by 1 counter image loads from Komarev;
+  the six scenes, saved count and game remain available if the service fails.
 - Six GIFs total **3.96 MiB**, within the **5 MiB loading budget** enforced by
   the animation checker. Large editable SVGs and source images are
   not loaded by the normal profile view.
@@ -86,28 +87,40 @@ not a live widget.
   shown below the profile. Every game page can return to the root README.
   Projects links to the account's repositories.
 
-The **Trespasses recorded** badge beneath the cemetery register uses
-[Komarev's profile views counter](https://github.com/antonkomarev/github-profile-views-counter).
-It counts image requests/page views, not unique people; previews and repeated
-loads may contribute. There is no account signup, secret or separate workflow
-for this badge. Its username is `tropicalbee`, label is `Trespasses recorded`,
-colour is muted copper `79644d`, and style is `flat-square`. Keep the live URL
-in the README: downloading and committing a copy would freeze the displayed
-count. The local checker validates the URL and placement, not remote uptime.
-
 The **Trespass Register** is a dedicated cemetery checkpoint below the miner.
 Footprints appear one by one on the empty path, a lantern flickers, and eyes
-briefly watch from the dark gateway. The wooden sign reads THE TRESPASS REGISTER
-and Something followed you in. The real count stays in the live badge directly
-below the scene; no number is baked into the artwork.
+briefly watch from the dark gateway. The wooden sign contains the saved number
+in pixel lettering, above "Something followed you in."
+
+An invisible `style=pixel` image from
+[Komarev's profile views counter](https://github.com/antonkomarev/github-profile-views-counter)
+records requests for `tropicalbee` between scheduled updates. Keep this image
+in the README; the saved GIF alone cannot record visits. No hosting account,
+personal token or extra service needs to be deployed.
+
+This is an approximate image-request count, not unique visitors. GitHub image
+caching, repeat loads and previews affect it. Each scheduled snapshot request
+also increments the service's count (normally two extra hits per day). The
+number in the artwork updates every 12 hours, subject to Actions queue delays.
+
+`trespass-section-kit/data/visitors.json` stores the count and UTC fetch time.
+Before the first successful run it contains `null`, and the sign honestly says
+AWAITING FIRST COUNT. Run **Actions > Refresh profile snapshots > Run workflow**
+after pushing to populate it. Failed, malformed or decreasing responses fail
+the job before publishing; the last committed count and images remain visible.
+If the counter is deliberately reset, review the saved data before allowing a
+lower value. The local checks use fixtures and do not contact Komarev.
 
 Its source, assets and exact generation prompt live in `trespass-section-kit/`.
 The 1024 by 410 scene loops for eight seconds at 12.5 FPS. A still PNG provides
-the reduced-motion alternative. Rebuild only this scene with:
+the reduced-motion alternative. Rebuild from the saved snapshot with:
 
 ```sh
 node trespass-section-kit/source/render-trespasses.mjs
 ```
+
+To fetch a fresh count manually (requires network access and adds one hit), run
+`python trespass-section-kit/source/fetch-visitors.py` before rendering.
 
 ## The house adventure
 
@@ -131,7 +144,7 @@ The six endings include escape, capture, transformation, rescue and sacrifice.
 
 The room artwork is shared across pages, with separate open-chest and cat/no-cat
 variants. Only the visited room and small SVG interface assets load during play;
-the profile loads six section GIFs plus the live counter badge. The eleven active adventure
+the profile loads six section GIFs plus the invisible counter image. The eleven active adventure
 illustrations live in `tropicalbee-halloween-banner-kit/assets/adventure/night/`.
 They use dark spruce, grey stone, coarse block textures, cool night shadows and
 small pools of pumpkin light. Grey beveled stone controls match the rooms.
@@ -176,6 +189,8 @@ These checks need only Python and Node, with no package installation:
 
 ```sh
 python scripts/check-profile.py
+python scripts/check-visitor-counter.py
+node scripts/check-visitor-label.mjs
 node ghost-miner-kit/source/check-route.mjs
 node ghost-miner-kit/source/check-labels.mjs
 node tropicalbee-halloween-banner-kit/source/check-adventure.mjs
@@ -215,7 +230,7 @@ Shared cloud, leaf, ember, steam and spoon animations live in
 `scripts/profile-motion.mjs`; kit configs let you disable atmospheric motion.
 
 Sharp now encodes GIFs as well as PNG/SVG frames, so FFmpeg is no longer needed.
-The nightly workflow installs Sharp in the miner kit on its disposable runner
+The scheduled workflow installs Sharp in the banner kit on its disposable runner
 and uses the same shared renderer helper. Keep the `scripts/` directory when
 uploading the assembled profile. Rendering the full-size tech stack can use
 around 1 GiB of memory; render the sections sequentially.
