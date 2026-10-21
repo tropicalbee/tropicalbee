@@ -16,6 +16,10 @@
 *.zip
 /preview.html
 
+# Retired robot experiment, retained locally but no longer used by the profile
+/garage-section-kit/source/haunted-model.mjs
+/scripts/check-haunted-model.mjs
+
 # Logs and temporary editor files
 *.log
 *.tmp

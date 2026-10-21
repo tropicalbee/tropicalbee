@@ -1,0 +1,6 @@
+{
+  "name": "tropicalbee-trespass-register",
+  "private": true,
+  "type": "module",
+  "scripts": {"render": "node source/render-trespasses.mjs"}
+}

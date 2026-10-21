@@ -26,6 +26,7 @@ for (const script of [
   'tech-stack-kit/source/render-stack.mjs',
   'garage-section-kit/source/render-garage.mjs',
   'ghost-miner-kit/source/render-miner.mjs',
+  'trespass-section-kit/source/render-trespasses.mjs',
 ]) {
   await new Promise((resolve, reject) => {
     const child = spawn(process.execPath, [fileURLToPath(new URL(script, root))], {

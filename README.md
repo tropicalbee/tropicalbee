@@ -1,4 +1,4 @@
-<!-- Keep the five kit folders beside this file in tropicalbee/tropicalbee. -->
+<!-- Keep the six kit folders beside this file in tropicalbee/tropicalbee. -->
 
 <!-- Keep this stack free of paragraphs and blank lines between sections. -->
 <div align="center">
@@ -41,6 +41,14 @@
 </div>
 
 <p align="center">
+  <picture>
+    <source media="(prefers-reduced-motion: reduce)" srcset="trespass-section-kit/assets/trespass-register-preview.png">
+    <img src="trespass-section-kit/assets/trespass-register.gif" width="1024" align="top" alt="The Trespass Register — footprints appear on an empty cemetery path, a lantern flickers, and eyes watch from beyond the gate. Something followed you in.">
+  </picture><br>
+  <img src="https://komarev.com/ghpvc/?username=tropicalbee&amp;label=Trespasses+recorded&amp;color=79644d&amp;style=flat-square" height="20" alt="Trespasses recorded — profile view counter" title="Counts profile view requests, not unique visitors">
+</p>
+
+<p align="center">
   <a href="https://github.com/tropicalbee?tab=repositories">Explore my repositories</a>
 </p>
 
@@ -56,6 +64,7 @@
     <li><strong>AI assistants:</strong> Codex, Antigravity.</li>
   </ul>
   <p><strong>Projects:</strong> still brewing in my garage..</p>
+  <p><strong>The Trespass Register:</strong> an abandoned cemetery checkpoint. Footprints approach the entrance although nobody is visible. The badge below the scene records profile-view requests, not unique visitors.</p>
   <p><strong>The Ghost Miner:</strong> a nightly snapshot of my public GitHub contribution calendar. Slate is an inactive day; copper and amber mark activity. The ghost mines each active day once before the loop resets.</p>
   <p><strong>The house:</strong> click the signboard in the entrance banner to play The Thirteenth Knock. Every Halloween, Briar House returns to steal another name. Explore two chapters, solve seven puzzles, and uncover six endings as you discover what its caretaker invited inside.</p>
 </details>

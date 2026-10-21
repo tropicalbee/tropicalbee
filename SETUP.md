@@ -1,27 +1,22 @@
 # tropicalbee profile setup
 
-The root `README.md` combines all five existing sections: entrance, resident,
-tech stack, projects and contribution miner. Their original folder names,
-source files and licenses are preserved. All five profile scenes now use the
-same subdued Minecraft-inspired block style, with stronger ambient movement.
-The entrance and tech stack have flat pixel moons and drifting flat clouds.
-Bats fly, leaves fall, ghosts bob and blink, spiders crawl, pause and descend, and pumpkin lights
-flicker. In the garage, the brewer floats beside rising bubbles and steam while
-a spoon stirs inside the cauldron, with its bowl hidden behind the front rim.
-Tech-stack webs remain attached to beam/post corners. Lettering and signs stay
-still and readable. The AI terminal is the exception: a damaged robot stands
-beside the cauldron for five quiet seconds, turns toward the viewer, reveals a
-ghost behind its cracked screen and changes MODEL OFFLINE to THERE IS NO MODEL.
-Its display goes dark before the eight-second loop resets. There is no audio
-or rapid flashing. The miner uses plain month captions above week columns and
-Mon/Wed/Fri row labels. A short opening month caption is omitted if it would
-crowd the next month; the underlying contribution days remain present.
+The root `README.md` combines six sections: entrance, resident, tech stack,
+projects, contribution miner and the Trespass Register. The original five
+scenes retain their animation and continuous layout. The separate cemetery
+footer gives the live visitor counter its own setting.
+
+Bats fly, leaves fall, ghosts bob, spiders crawl and descend, and pumpkin lights
+flicker. The garage contains the original brewer, potion bubbles, steam and
+stirring spoon; the robot experiment is no longer part of the scene. The miner
+uses readable month captions above week columns and Mon/Wed/Fri row labels.
+The opening month caption is omitted when its fragment would crowd the next
+month, without removing any contribution days.
 
 ## Put it on your GitHub profile
 
 1. Use the public repository **`tropicalbee/tropicalbee`**. GitHub displays a
    profile README from a public repository whose name matches the username.
-2. Extract the ZIP. Place its contents at the repository root, keeping the five
+2. Extract the ZIP. Place its contents at the repository root, keeping the six
    kit folders intact. Include the hidden `.github` folder and `.gitignore`.
    Do not put everything inside an extra enclosing folder.
 3. Review and commit the files yourself, then push them to the default branch.
@@ -55,7 +50,7 @@ See [GitHub's schedule documentation](https://docs.github.com/en/actions/referen
 The job checks local links, fetches and validates the calendar, runs route and
 month-label checks, then renders the miner GIF and still previews. Only the
 three calendar/route JSON files and three finished miner assets are staged.
-The other four illustrations stay pre-rendered, saving daily render time.
+The other five illustrations stay pre-rendered, saving daily render time.
 The original route baseline remains unchanged.
 
 The prepared workflow commits and pushes those generated files when you
@@ -74,13 +69,13 @@ not a live widget.
 
 - All scene illustrations and room images are stored in the repository.
   The visitor badge loads from Komarev;
-  the five scenes and game remain available if that external badge fails.
-- Five GIFs total **3.58 MiB**, within the **5 MiB combined loading budget**
-  enforced by the animation checker. Large editable SVGs and source images are
+  the six scenes and game remain available if that external badge fails.
+- Six GIFs total **3.96 MiB**, within the **5 MiB loading budget** enforced by
+  the animation checker. Large editable SVGs and source images are
   not loaded by the normal profile view.
 - Every section uses the same 1024-pixel display width and its original aspect
   ratio; GitHub constrains images to the available page width.
-- The five illustrations form one continuous stack. Margin-free section blocks
+- The original five illustrations form one continuous stack. Margin-free section blocks
   and top-aligned images remove paragraph spacing and image baseline gaps.
 - Each picture offers the existing still PNG when the viewer supports the
   `prefers-reduced-motion` media query. Still alternatives are larger than GIFs.
@@ -91,7 +86,7 @@ not a live widget.
   shown below the profile. Every game page can return to the root README.
   Projects links to the account's repositories.
 
-The **Trespasses recorded** badge beneath the miner uses
+The **Trespasses recorded** badge beneath the cemetery register uses
 [Komarev's profile views counter](https://github.com/antonkomarev/github-profile-views-counter).
 It counts image requests/page views, not unique people; previews and repeated
 loads may contribute. There is no account signup, secret or separate workflow
@@ -100,11 +95,19 @@ colour is muted copper `79644d`, and style is `flat-square`. Keep the live URL
 in the README: downloading and committing a copy would freeze the displayed
 count. The local checker validates the URL and placement, not remote uptime.
 
-The haunted robot and terminal are native pixel shapes in
-`garage-section-kit/source/haunted-model.mjs`. Set `animateModel` to `false` in
-`garage-config.json` to hold the offline state. Reduced-motion visitors
-see the ordinary still PNG, which also shows that offline state. The source
-supports both the rendered GIF and animated SVG without new dependencies.
+The **Trespass Register** is a dedicated cemetery checkpoint below the miner.
+Footprints appear one by one on the empty path, a lantern flickers, and eyes
+briefly watch from the dark gateway. The wooden sign reads THE TRESPASS REGISTER
+and Something followed you in. The real count stays in the live badge directly
+below the scene; no number is baked into the artwork.
+
+Its source, assets and exact generation prompt live in `trespass-section-kit/`.
+The 1024 by 410 scene loops for eight seconds at 12.5 FPS. A still PNG provides
+the reduced-motion alternative. Rebuild only this scene with:
+
+```sh
+node trespass-section-kit/source/render-trespasses.mjs
+```
 
 ## The house adventure
 
@@ -128,7 +131,7 @@ The six endings include escape, capture, transformation, rescue and sacrifice.
 
 The room artwork is shared across pages, with separate open-chest and cat/no-cat
 variants. Only the visited room and small SVG interface assets load during play;
-the profile still loads only its five section GIFs. The eleven active adventure
+the profile loads six section GIFs plus the live counter badge. The eleven active adventure
 illustrations live in `tropicalbee-halloween-banner-kit/assets/adventure/night/`.
 They use dark spruce, grey stone, coarse block textures, cool night shadows and
 small pools of pumpkin light. Grey beveled stone controls match the rooms.
@@ -180,25 +183,24 @@ node tropicalbee-halloween-banner-kit/source/render-adventure.mjs --check
 ```
 
 The animated profile renderer needs the existing `sharp` dependency. One local
-installation in the banner kit can serve all five kits:
+installation in the banner kit can serve all six kits:
 
 ```sh
 npm install --prefix tropicalbee-halloween-banner-kit --no-package-lock --no-audit --no-fund
 node scripts/render-profile.mjs
 node scripts/check-profile-animation.mjs
 node scripts/check-scene-geometry.mjs
-node scripts/check-haunted-model.mjs
 ```
 
-`render-profile.mjs` rebuilds all five scenes sequentially. The animation check
+`render-profile.mjs` rebuilds all six scenes sequentially. The animation check
 compares their dimensions, frame counts, individual frame delays and loop
 settings with the pre-restyle baseline, checks visible motion in individual
 scene regions, and checks that signs and lettering remain still. The mining
-route is unchanged; the other scenes deliberately move more. Four scenes loop in
+route is unchanged; the other scenes deliberately move more. Five scenes loop in
 8 seconds; the miner retains its 24-second loop. The resident portrait is also
 preserved. If you intentionally change timing later, review the baseline too.
 
-The active backdrops are normalized to each kit's `source/vanilla-background.png`.
+The original five backdrops are normalized to each kit's `source/vanilla-background.png`.
 The banner and stack use `source/vanilla-sky-original.png`, with the moon and
 clouds drawn as flat pixel layers. The garage uses `source/vanilla-actor-original.png`
 so its floating brewer is not duplicated in the backdrop. The resident and

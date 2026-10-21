@@ -2,7 +2,7 @@
 
 from html.parser import HTMLParser
 from pathlib import Path
-from urllib.parse import unquote, urlsplit
+from urllib.parse import unquote, urlsplit, parse_qs
 import re
 import struct
 import xml.etree.ElementTree as ET
@@ -82,14 +82,28 @@ def main():
             profile_images = parser.images
     for target in images:
         image_size(target)
-    if len(profile_images) != 5:
-        raise ValueError("The profile must include all five illustrated sections")
-    for img in profile_images:
+    section_images = [img for img in profile_images if not urlsplit(img["src"]).scheme]
+    counters = [img for img in profile_images if urlsplit(img["src"]).scheme]
+    if len(section_images) != 6:
+        raise ValueError("The profile must include all six illustrated sections")
+    if len(counters) != 1:
+        raise ValueError("Expected one profile view counter beneath the illustrations")
+    counter = urlsplit(counters[0]["src"])
+    if (counter.scheme != "https" or counter.netloc != "komarev.com" or counter.path != "/ghpvc/"
+            or parse_qs(counter.query) != {"username": ["tropicalbee"], "label": ["Trespasses recorded"],
+                                           "color": ["79644d"], "style": ["flat-square"]}):
+        raise ValueError("Unexpected counter configuration")
+    if profile_images[-1] != counters[0]:
+        raise ValueError("The counter must follow the six illustrated sections")
+    if section_images[-1]["src"] != "trespass-section-kit/assets/trespass-register.gif":
+        raise ValueError("The counter must belong to the Trespass Register scene")
+    for img in section_images:
         if img.get("width") != "1024":
             raise ValueError("Profile sections must share a consistent display width")
-    total = sum(local_target(ROOT / "README.md", img["src"]).stat().st_size for img in profile_images)
+    total = sum(local_target(ROOT / "README.md", img["src"]).stat().st_size for img in section_images)
     print(f"PASS: {len(documents)} documents, {references} local references, {len(images)} image files.")
-    print(f"Five profile animations: {total:,} bytes ({total / 1024**2:.2f} MiB).")
+    print(f"Six profile animations: {total:,} bytes ({total / 1024**2:.2f} MiB).")
+    print("Counter URL and placement validated; external service availability is not checked offline.")
 
 
 if __name__ == "__main__":
