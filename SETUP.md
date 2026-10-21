@@ -9,7 +9,11 @@ Bats fly, leaves fall, ghosts bob and blink, spiders crawl, pause and descend, a
 flicker. In the garage, the brewer floats beside rising bubbles and steam while
 a spoon stirs inside the cauldron, with its bowl hidden behind the front rim.
 Tech-stack webs remain attached to beam/post corners. Lettering and signs stay
-still and readable. The miner uses plain month captions above week columns and
+still and readable. The AI terminal is the exception: a damaged robot stands
+beside the cauldron for five quiet seconds, turns toward the viewer, reveals a
+ghost behind its cracked screen and changes MODEL OFFLINE to THERE IS NO MODEL.
+Its display goes dark before the eight-second loop resets. There is no audio
+or rapid flashing. The miner uses plain month captions above week columns and
 Mon/Wed/Fri row labels. A short opening month caption is omitted if it would
 crowd the next month; the underlying contribution days remain present.
 
@@ -68,7 +72,9 @@ not a live widget.
 
 ## Loading and accessibility
 
-- All illustrations, room images and fonts are stored in the repository.
+- All scene illustrations and room images are stored in the repository.
+  The visitor badge loads from Komarev;
+  the five scenes and game remain available if that external badge fails.
 - Five GIFs total **3.58 MiB**, within the **5 MiB combined loading budget**
   enforced by the animation checker. Large editable SVGs and source images are
   not loaded by the normal profile view.
@@ -84,6 +90,21 @@ not a live widget.
   banner shares that link, including the sign; no separate entrance link is
   shown below the profile. Every game page can return to the root README.
   Projects links to the account's repositories.
+
+The **Trespasses recorded** badge beneath the miner uses
+[Komarev's profile views counter](https://github.com/antonkomarev/github-profile-views-counter).
+It counts image requests/page views, not unique people; previews and repeated
+loads may contribute. There is no account signup, secret or separate workflow
+for this badge. Its username is `tropicalbee`, label is `Trespasses recorded`,
+colour is muted copper `79644d`, and style is `flat-square`. Keep the live URL
+in the README: downloading and committing a copy would freeze the displayed
+count. The local checker validates the URL and placement, not remote uptime.
+
+The haunted robot and terminal are native pixel shapes in
+`garage-section-kit/source/haunted-model.mjs`. Set `animateModel` to `false` in
+`garage-config.json` to hold the offline state. Reduced-motion visitors
+see the ordinary still PNG, which also shows that offline state. The source
+supports both the rendered GIF and animated SVG without new dependencies.
 
 ## The house adventure
 
@@ -166,6 +187,7 @@ npm install --prefix tropicalbee-halloween-banner-kit --no-package-lock --no-aud
 node scripts/render-profile.mjs
 node scripts/check-profile-animation.mjs
 node scripts/check-scene-geometry.mjs
+node scripts/check-haunted-model.mjs
 ```
 
 `render-profile.mjs` rebuilds all five scenes sequentially. The animation check
@@ -195,18 +217,3 @@ The nightly workflow installs Sharp in the miner kit on its disposable runner
 and uses the same shared renderer helper. Keep the `scripts/` directory when
 uploading the assembled profile. Rendering the full-size tech stack can use
 around 1 GiB of memory; render the sections sequentially.
-
-## Suggested commit checkpoint
-
-One commit is sufficient for this assembled profile. In your existing profile
-repository, review `git status` and `git diff`, then run these commands yourself:
-
-```sh
-git add -- README.md SETUP.md .gitignore .github/workflows/refresh-profile.yml scripts tropicalbee-halloween-banner-kit resident-section-kit tech-stack-kit garage-section-kit ghost-miner-kit
-git commit -m "feat(profile): add muted Minecraft art and livelier scene animations"
-```
-
-Push using your normal process. Do not stage the ZIP, `preview.html`,
-`node_modules`, render `build` directories or local cache files. If you prefer a
-review branch, a suitable name is `feat/haunted-profile`; the schedule becomes
-active only after the workflow reaches the default branch.
