@@ -4,7 +4,10 @@
     "building something pretty useless in my garage.",
     "sometimes it even works."
   ],
-  "roomAsset": "source/room-background.png",
+  "roomAsset": "source/vanilla-background.png",
   "animateEyes": true,
-  "animateLights": true
+  "animateLights": true,
+  "animateAtmosphere": true,
+  "animateGhost": true,
+  "animateSpider": true
 }

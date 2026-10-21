@@ -6,7 +6,7 @@ A Minecraft Halloween README section for work in progress. The sign has a large 
 >
 > still brewing in my garage..
 
-The potion bubbles rise while the fire and pumpkin face flicker. The room and lettering stay still.
+The brewer floats and blinks, a spoon stirs, and potion bubbles, steam and embers rise while the fire and pumpkin face flicker. The room and lettering stay still.
 
 ![A ghost brewing potion in a haunted Minecraft garage](assets/garage-brewing.gif)
 
@@ -28,7 +28,7 @@ The assets include a GIF for README use, an animated SVG, a static SVG and a PNG
 
 ## Render
 
-Requires Node.js, FFmpeg on your PATH, and the `sharp` package:
+Requires Node.js and the `sharp` package. Retain the repository's shared `scripts/` folder and `resident-section-kit/source/ghost-sprite.mjs`:
 
 ```sh
 npm install

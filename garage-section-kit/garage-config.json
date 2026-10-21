@@ -3,9 +3,11 @@
     "PROJECTS",
     "still brewing in my garage.."
   ],
-  "textColor": "#e2d0a8",
+  "textColor": "#cdd0c6",
   "animateBubbles": true,
   "animateFire": true,
   "animatePumpkin": true,
-  "framesPerSecond": 12.5
+  "framesPerSecond": 12.5,
+  "animateAtmosphere": true,
+  "animateGhost": true
 }

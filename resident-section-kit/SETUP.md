@@ -6,7 +6,7 @@ The room continues the entrance banner's haunted cottage: cold navy shadow, weat
 
 `source/ghost-sprite.mjs` contains the exact ghost body, face, colors and blink function used by the entrance banner. The Resident uses a uniform 2x scale. Keep this character asset when changing the room; do not regenerate a different ghost with the background.
 
-The room background deliberately contains no ghost. The renderer places the shared sprite behind the laptop and then restores the laptop's original pixels as a foreground layer. The viewer sees the plain outer lid; the inner screen faces the ghost. `source/spider-sprite.mjs` also reuses the entrance spider as a small still corner detail.
+The room background deliberately contains no ghost. The renderer places the shared sprite behind the laptop and then restores the laptop's original pixels as a foreground layer. The viewer sees the plain outer lid; the inner screen faces the ghost. The spider shares the articulated sprite in `../tech-stack-kit/source/spider-sprite.mjs`: it crawls beside the web, pauses, drops on silk and climbs back. Keep both kits when rebuilding.
 
 ## Add it
 
@@ -19,13 +19,13 @@ The default bio is exactly two lines:
 - building something pretty useless in my garage.
 - sometimes it even works.
 
-Edit `bioLines` in `resident-config.json`, keeping each line at 54 characters or fewer. Run `npm install` once and `npm run render` after edits. The heading uses the included bitmap font; the bio uses system monospace text.
+Edit `bioLines` in `resident-config.json`, keeping each line at 54 characters or fewer. Run `npm install` once and `npm run render` after edits. Retain the repository's shared `scripts/` folder. Both heading and bio use the included bitmap font.
 
 For directly editable Markdown text, use `EDITABLE-BIO.md`; it combines the animated left vignette with ordinary text. GitHub supplies the table border in that variant.
 
 ## Animation
 
-The eight-second loop has two eye blinks. The ghost body, laptop, spider, cat, furniture, title and bio stay still. Only candle flame cores and carved pumpkin light pulse; wax and orange skins stay fixed. Set `animateEyes` or `animateLights` to false to disable those effects. SVG respects reduced motion; the GIF plays its saved frames.
+The eight-second loop has two eye blinks, a bobbing ghost, a descending spider and rising candle embers. The laptop, cat, furniture, title and bio stay still. Candle flame cores and carved pumpkin light pulse; wax and orange skins stay fixed. The `animateEyes`, `animateLights`, `animateGhost`, `animateSpider` and `animateAtmosphere` switches control these effects. SVG respects reduced motion; the GIF plays its saved frames.
 
 ## Extend
 

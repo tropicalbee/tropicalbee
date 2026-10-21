@@ -2,7 +2,16 @@
 
 The root `README.md` combines all five existing sections: entrance, resident,
 tech stack, projects and contribution miner. Their original folder names,
-artwork, source files and licenses are preserved.
+source files and licenses are preserved. All five profile scenes now use the
+same subdued Minecraft-inspired block style, with stronger ambient movement.
+The entrance and tech stack have flat pixel moons and drifting flat clouds.
+Bats fly, leaves fall, ghosts bob and blink, spiders crawl, pause and descend, and pumpkin lights
+flicker. In the garage, the brewer floats beside rising bubbles and steam while
+a spoon stirs inside the cauldron, with its bowl hidden behind the front rim.
+Tech-stack webs remain attached to beam/post corners. Lettering and signs stay
+still and readable. The miner uses plain month captions above week columns and
+Mon/Wed/Fri row labels. A short opening month caption is omitted if it would
+crowd the next month; the underlying contribution days remain present.
 
 ## Put it on your GitHub profile
 
@@ -60,8 +69,9 @@ not a live widget.
 ## Loading and accessibility
 
 - All illustrations, room images and fonts are stored in the repository.
-- Five GIFs total approximately **2.87 MiB** in this package. Large editable
-  SVGs and source images are not loaded by the normal profile view.
+- Five GIFs total **3.58 MiB**, within the **5 MiB combined loading budget**
+  enforced by the animation checker. Large editable SVGs and source images are
+  not loaded by the normal profile view.
 - Every section uses the same 1024-pixel display width and its original aspect
   ratio; GitHub constrains images to the available page width.
 - The five illustrations form one continuous stack. Margin-free section blocks
@@ -97,7 +107,7 @@ The six endings include escape, capture, transformation, rescue and sacrifice.
 
 The room artwork is shared across pages, with separate open-chest and cat/no-cat
 variants. Only the visited room and small SVG interface assets load during play;
-the profile still loads its original five GIFs. The eleven active adventure
+the profile still loads only its five section GIFs. The eleven active adventure
 illustrations live in `tropicalbee-halloween-banner-kit/assets/adventure/night/`.
 They use dark spruce, grey stone, coarse block textures, cool night shadows and
 small pools of pumpkin light. Grey beveled stone controls match the rooms.
@@ -148,9 +158,43 @@ node tropicalbee-halloween-banner-kit/source/check-adventure.mjs
 node tropicalbee-halloween-banner-kit/source/render-adventure.mjs --check
 ```
 
-A full miner rebuild additionally needs FFmpeg and the kit's `sharp` dependency.
-The workflow installs the renderer dependency and, when absent, FFmpeg on its
-disposable Ubuntu runner. It does not change your local machine.
+The animated profile renderer needs the existing `sharp` dependency. One local
+installation in the banner kit can serve all five kits:
+
+```sh
+npm install --prefix tropicalbee-halloween-banner-kit --no-package-lock --no-audit --no-fund
+node scripts/render-profile.mjs
+node scripts/check-profile-animation.mjs
+node scripts/check-scene-geometry.mjs
+```
+
+`render-profile.mjs` rebuilds all five scenes sequentially. The animation check
+compares their dimensions, frame counts, individual frame delays and loop
+settings with the pre-restyle baseline, checks visible motion in individual
+scene regions, and checks that signs and lettering remain still. The mining
+route is unchanged; the other scenes deliberately move more. Four scenes loop in
+8 seconds; the miner retains its 24-second loop. The resident portrait is also
+preserved. If you intentionally change timing later, review the baseline too.
+
+The active backdrops are normalized to each kit's `source/vanilla-background.png`.
+The banner and stack use `source/vanilla-sky-original.png`, with the moon and
+clouds drawn as flat pixel layers. The garage uses `source/vanilla-actor-original.png`
+so its floating brewer is not duplicated in the backdrop. The resident and
+miner use `source/vanilla-original.png`. The resident source has white
+letterboxing; the full renderer trims that before placing the animated layers.
+Earlier source artwork is retained. The art has simpler block construction,
+coarse textures, muted spruce/stone, and small light cores instead of broad glow.
+It is generated Minecraft-inspired artwork, not an actual game capture.
+Exact restyling prompts are in `scripts/profile-art-prompts.json`.
+The sky and brewer cleanup prompts are in `scripts/profile-motion-art-prompts.json`.
+Shared cloud, leaf, ember, steam and spoon animations live in
+`scripts/profile-motion.mjs`; kit configs let you disable atmospheric motion.
+
+Sharp now encodes GIFs as well as PNG/SVG frames, so FFmpeg is no longer needed.
+The nightly workflow installs Sharp in the miner kit on its disposable runner
+and uses the same shared renderer helper. Keep the `scripts/` directory when
+uploading the assembled profile. Rendering the full-size tech stack can use
+around 1 GiB of memory; render the sections sequentially.
 
 ## Suggested commit checkpoint
 
@@ -158,8 +202,8 @@ One commit is sufficient for this assembled profile. In your existing profile
 repository, review `git status` and `git diff`, then run these commands yourself:
 
 ```sh
-git add -- README.md SETUP.md .gitignore .github/workflows/refresh-profile.yml scripts/check-profile.py tropicalbee-halloween-banner-kit resident-section-kit tech-stack-kit garage-section-kit ghost-miner-kit
-git commit -m "feat(profile): assemble haunted profile and schedule midnight refresh"
+git add -- README.md SETUP.md .gitignore .github/workflows/refresh-profile.yml scripts tropicalbee-halloween-banner-kit resident-section-kit tech-stack-kit garage-section-kit ghost-miner-kit
+git commit -m "feat(profile): add muted Minecraft art and livelier scene animations"
 ```
 
 Push using your normal process. Do not stage the ZIP, `preview.html`,

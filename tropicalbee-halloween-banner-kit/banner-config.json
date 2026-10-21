@@ -1,9 +1,10 @@
 {
   "username": "tropicalbee",
   "tagline": "Come in. Mind the spiders.",
-  "titleColor": "#c9c3ac",
+  "titleColor": "#cdd0c6",
   "animateLights": true,
   "animateSpider": true,
   "animateBats": true,
-  "animateGhost": true
+  "animateGhost": true,
+  "animateAtmosphere": true
 }

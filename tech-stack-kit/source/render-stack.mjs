@@ -1,21 +1,20 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
-import {createRequire} from 'node:module';
-import {spawn} from 'node:child_process';
 import {pixelText,textWidth} from './pixel-font.mjs';
 import {ghostShape,ghostEyes,eyeOpen} from './ghost-sprite.mjs';
-import {spiderShape} from './spider-sprite.mjs';
-const require=createRequire(import.meta.url);
-const sharp=require(process.env.CODEX_PRIMARY_RUNTIME_NODE_MODULES?process.env.CODEX_PRIMARY_RUNTIME_NODE_MODULES+'/sharp':'sharp');
+import {spiderAt,crawlingSpider,spiderLegCSS} from './spider-sprite.mjs';
+import {loadSharp,encodeGifFrames} from '../../scripts/profile-render-utils.mjs';
+import {atmosphere,atmosphereCSS,flatMoon} from '../../scripts/profile-motion.mjs';
+const sharp=loadSharp(import.meta.url);
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..'),out=path.join(root,'assets');
 await fs.mkdir(out,{recursive:true});
 const cfg=JSON.parse(await fs.readFile(path.join(root,'stack-config.json'),'utf8'));
 const W=1280,H=1920,T=8,FPS=Number(cfg.framesPerSecond??12.5),N=T*FPS,TAU=Math.PI*2;
 if(![10,12.5,20].includes(FPS))throw Error('Use 10, 12.5 or 20 FPS for exact GIF timing.');
 if(cfg.rows?.length!==5)throw Error('Use five category signs.');
-const bg=await sharp(path.join(root,'source/outdoor-original.png')).resize(W,H,{kernel:'nearest'}).png().toBuffer();
-await fs.writeFile(path.join(root,'source/outdoor-background.png'),bg);
+const bg=await sharp(path.join(root,'source/vanilla-sky-original.png')).resize(W,H,{kernel:'nearest'}).png().toBuffer();
+await fs.writeFile(path.join(root,'source/vanilla-background.png'),bg);
 const rgb=await sharp(bg).removeAlpha().raw().toBuffer();
 const bgURI='data:image/png;base64,'+bg.toString('base64');
 const r=(x,y,w,h,c)=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${c}"/>`;
@@ -29,19 +28,19 @@ const layouts=[
 ];
 function categorySign(label,cy){
  const x=245,y=cy-45,w=235,h=90;
- let s=r(x+4,y+6,w,h,'#26180d')+r(x,y,w,h,'#8d6536');
- s+=r(x+6,y+6,w-12,h-12,'#b58d52');
- s+=`<path d="M${x} ${y+h}V${y}H${x+w}V${y+6}H${x+6}V${y+h}Z" fill="#c6a365"/><path d="M${x+w} ${y}V${y+h}H${x}V${y+h-6}H${x+w-6}V${y}Z" fill="#6a4828"/>`;
- for(let xx=x+14;xx<x+w-12;xx+=32)s+=r(xx,y+13,16,3,'#a78049')+r(xx,y+h-16,16,3,'#c09b5d');
+ let s=r(x+4,y+6,w,h,'#26180d')+r(x,y,w,h,'#625441');
+ s+=r(x+6,y+6,w-12,h-12,'#a0957b');
+ s+=`<path d="M${x} ${y+h}V${y}H${x+w}V${y+6}H${x+6}V${y+h}Z" fill="#b6aa8e"/><path d="M${x+w} ${y}V${y+h}H${x}V${y+h-6}H${x+w-6}V${y}Z" fill="#514635"/>`;
+ for(let xx=x+14;xx<x+w-12;xx+=32)s+=r(xx,y+13,16,3,'#887c64')+r(xx,y+h-16,16,3,'#a99d80');
  const size=Math.min(3.8,213/textWidth(label,1));
  return s+`<g stroke="#151108" stroke-width="1.4" stroke-linejoin="miter" shape-rendering="crispEdges">${pixelText(label,x+w/2,cy-7*size/2,size,'#151108')}</g>`;
 }
 function frame(cx,y,size){
  const x=cx-size/2,b=10;
- let s=r(x+5,y+7,size,size,'#21130b')+r(x,y,size,size,'#846036');
- s+=`<path d="M${x} ${y+size}V${y}H${x+size}V${y+b}H${x+b}V${y+size}Z" fill="#b6965f"/><path d="M${x+size} ${y}V${y+size}H${x}V${y+size-b}H${x+size-b}V${y}Z" fill="#604125"/>`;
- for(let xx=x+14;xx<x+size-8;xx+=20)s+=r(xx,y+3,9,3,'#c2a46c')+r(xx,y+size-7,9,3,'#8c663a');
- s+=r(x+b,y+b,size-b*2,size-b*2,'#482718')+r(x+b,y+b,size-b*2,4,'#322015');
+ let s=r(x+5,y+7,size,size,'#21130b')+r(x,y,size,size,'#5b4a36');
+ s+=`<path d="M${x} ${y+size}V${y}H${x+size}V${y+b}H${x+b}V${y+size}Z" fill="#837156"/><path d="M${x+size} ${y}V${y+size}H${x}V${y+size-b}H${x+size-b}V${y}Z" fill="#3f3326"/>`;
+ for(let xx=x+14;xx<x+size-8;xx+=20)s+=r(xx,y+3,9,3,'#948269')+r(xx,y+size-7,9,3,'#6c5b43');
+ s+=r(x+b,y+b,size-b*2,size-b*2,'#382f24')+r(x+b,y+b,size-b*2,4,'#28241e');
  return s;
 }
 const labelList=[];
@@ -60,14 +59,19 @@ for(let i=0;i<5;i++){
    if(!file.startsWith(root+path.sep)||!['.png','.svg'].includes(path.extname(file).toLowerCase()))throw Error('Use a local PNG or SVG icon inside the kit.');
    if(textWidth(item.label,2.5)>180)throw Error('Shorten the technology label: '+item.label);
    const icon=await sharp(file).resize(p.icon,p.icon,{fit:'contain',kernel:'nearest',background:{r:0,g:0,b:0,alpha:0}}).png().toBuffer();
-   display+=`<g aria-label="${escape(item.label)}" shape-rendering="crispEdges">${frame(cx,y,p.size)}<image x="${cx-p.icon/2}" y="${y+(p.size-p.icon)/2}" width="${p.icon}" height="${p.icon}" image-rendering="pixelated" href="data:image/png;base64,${icon.toString('base64')}"/>${pixelText(item.label,cx,y+p.size+6,2.5,'#e0d6be',true)}</g>`;
+   display+=`<g aria-label="${escape(item.label)}" shape-rendering="crispEdges">${frame(cx,y,p.size)}<image x="${cx-p.icon/2}" y="${y+(p.size-p.icon)/2}" width="${p.icon}" height="${p.icon}" image-rendering="pixelated" href="data:image/png;base64,${icon.toString('base64')}"/>${pixelText(item.label,cx,y+p.size+6,2.5,'#d1d2c8',true)}</g>`;
    labelList.push(item.label);
   }
  }
 }
-const moonPath='M-12 -32H12V-28H24V-20H28V-12H32V12H28V20H24V28H12V32H-12V28H-24V20H-28V12H-32V-12H-28V-20H-24V-28H-12Z';
-const moon=`<defs><clipPath id="moon"><path d="${moonPath}"/></clipPath></defs><g transform="translate(100 88) scale(1.25)" shape-rendering="crispEdges"><path d="${moonPath}" fill="#b9bec2"/><g clip-path="url(#moon)">${r(-24,-20,20,12,'#d4d8d7')}${r(-4,-28,12,16,'#c5cacc')}${r(8,0,16,12,'#9da5ac')}${r(-20,8,12,12,'#a1a9b1')}${r(-8,16,20,8,'#cbd0d1')}${r(-12,-8,8,8,'#afb7bd')}</g></g>`;
-const fixedScene=`<image width="${W}" height="${H}" href="${bgURI}"/>`+moon+display;
+const moon=flatMoon(100,88,2);
+// Each web spans the junction of a horizontal beam and a vertical post.
+function cornerWeb(x,y,mirror=1){
+ let strands='';
+ for(const n of [24,48,72,96])strands+=`<path d="M0 ${n}L${Math.round(n*.2)} ${Math.round(n*.55)}L${Math.round(n*.55)} ${Math.round(n*.2)}L${n} 0"/>`;
+ return `<g transform="translate(${x} ${y}) scale(${mirror} 1)" fill="none" stroke="#b5bab3" stroke-width="2" opacity=".8" shape-rendering="crispEdges"><path d="M0 96V0H96M0 0L72 72M0 0L96 35M0 0L35 96"/>${strands}</g>`;
+}
+const fixedScene=`<image width="${W}" height="${H}" href="${bgURI}"/>`+moon+display+cornerWeb(244,284)+cornerWeb(1038,1449,-1);
 const lightSources=[
  {id:'left-top',box:[172,182,91,86],phase:.2},
  {id:'right-top',box:[1028,182,100,86],phase:1.2},
@@ -86,36 +90,29 @@ for(const l of lightSources){
  l.clip=runs;console.log(l.id+': '+count+' light-core pixels');
 }
 const flicker=(t,p)=>Math.max(.12,Math.min(.95,.58+.29*Math.sin(TAU*t/2+p)+.07*Math.sin(TAU*t/.5+p)));
-const ghostAt=t=>[1192+2*Math.sin(TAU*t/T),946+4*Math.sin(TAU*t/T)];
-const spiderAt=t=>[148,521+5-5*Math.cos(TAU*t/T)];
-const webPlaces=[{x:106,y:382,size:100,phase:0},{x:1123,y:1320,size:104,phase:1.4}];
-const webAt=(t,i)=>[webPlaces[i].x+Math.round(1.5*Math.sin(TAU*t/T+webPlaces[i].phase)),webPlaces[i].y];
-const webURI='data:image/png;base64,'+(await fs.readFile(path.join(root,'source/cobweb.png'))).toString('base64');
+const ghostAt=t=>[1192+14*Math.sin(TAU*t/T),946+26*Math.sin(TAU*t/T)];
 function keyframes(name,fn,duration=T,n=128){return '@keyframes '+name+'{'+Array.from({length:n+1},(_,i)=>`${(i*100/n).toFixed(3)}%{${fn(i*duration/n)}}`).join('')+'}';}
 let css=keyframes('ghostFloat',t=>{const[x,y]=ghostAt(t);return `transform:translate(${x.toFixed(2)}px,${y.toFixed(2)}px)`;})+'.ghost{animation:ghostFloat 8s linear infinite}';
-css+=keyframes('spiderDrop',t=>{const[x,y]=spiderAt(t);return `transform:translate(${x}px,${y.toFixed(2)}px)`;})+'.spider{animation:spiderDrop 8s linear infinite}';
-css+=keyframes('threadStretch',t=>`transform:scaleY(${((spiderAt(t)[1]-12-380)/(521-12-380)).toFixed(4)})`)+'.thread{animation:threadStretch 8s linear infinite;transform-origin:148px 380px}';
+css+=keyframes('spiderDrop',t=>{const p=spiderAt(t);return `transform:translate(${p.x.toFixed(2)}px,${p.y.toFixed(2)}px) rotate(${p.angle}deg)`;})+'.spider{animation:spiderDrop 8s linear infinite}';
+css+=keyframes('threadStretch',t=>{const p=spiderAt(t);return `transform:scaleY(${Math.max(0,p.y-547).toFixed(2)});opacity:${p.thread?1:0}`;})+'.thread{animation:threadStretch 8s linear infinite;transform-origin:0 0}';
+css+=spiderLegCSS;
 css+=keyframes('ghostBlink',t=>`transform:scaleY(${eyeOpen(t).toFixed(3)})`)+'.ghost-eyes{animation:ghostBlink 8s linear infinite}';
 lightSources.forEach((l,i)=>{css+=keyframes('light'+i,t=>`opacity:${(.76*(1-flicker(t,l.phase))).toFixed(3)}`,2,32)+`.light${i}{animation:light${i} 2s linear infinite}`;});
-webPlaces.forEach((_,i)=>{css+=keyframes('web'+i,t=>{const[x,y]=webAt(t,i);return `transform:translate(${x}px,${y}px)`;})+`.web${i}{animation:web${i} 8s steps(1,end) infinite}`;});
+css+=atmosphereCSS('stack');
 css+='@media(prefers-reduced-motion:reduce){g,rect,path{animation:none!important}}';
 function motion(t,animated=false){
  let s='<defs>'+lightSources.map((l,i)=>`<clipPath id="core${i}">${l.clip}</clipPath>`).join('')+'</defs>';
  if(cfg.animateLights)s+=lightSources.map((l,i)=>{const[x,y,w,h]=l.box;return `<g clip-path="url(#core${i})"><rect class="${animated?'light'+i:''}" x="${x}" y="${y}" width="${w}" height="${h}" fill="#322411" opacity="${(.76*(1-flicker(t,l.phase))).toFixed(3)}"/></g>`;}).join('');
- for(let i=0;i<webPlaces.length;i++){
-  const w=webPlaces[i],[x,y]=webAt(cfg.animateCobwebs?t:0,i);
-  s+=`<g class="${animated&&cfg.animateCobwebs?'web'+i:''}" transform="translate(${x} ${y})"><image width="${w.size}" height="${w.size}" image-rendering="pixelated" href="${webURI}"/></g>`;
- }
  const gt=cfg.animateGhost?t:0,[gx,gy]=ghostAt(gt);
  s+=`<g class="${animated&&cfg.animateGhost?'ghost':''}" transform="translate(${gx.toFixed(2)} ${gy.toFixed(2)})"><g transform="scale(2)" shape-rendering="crispEdges">${ghostShape}${ghostEyes(gt,animated&&cfg.animateGhost)}</g></g>`;
- const st=cfg.animateSpider?t:0,[sx,sy]=spiderAt(st);
- s+=`<path class="${animated&&cfg.animateSpider?'thread':''}" d="M148 380L148 ${(sy-12).toFixed(2)}" stroke="#868c87" stroke-width="2"/>`;
- s+=`<g class="${animated&&cfg.animateSpider?'spider':''}" transform="translate(${sx} ${sy.toFixed(2)})" shape-rendering="crispEdges">${spiderShape}</g>`;
- return s;
+ const st=cfg.animateSpider?t:0,p=spiderAt(st);
+ s+=`<g transform="translate(178 535)"><rect class="${animated&&cfg.animateSpider?'thread':''}" x="-1" y="0" width="2" height="1" fill="#868c87" transform="scale(1 ${Math.max(0,p.y-547).toFixed(2)})" opacity="${p.thread?1:0}"/></g>`;
+ s+=`<g class="${animated&&cfg.animateSpider?'spider':''}" transform="translate(${p.x.toFixed(2)} ${p.y.toFixed(2)}) rotate(${p.angle})" shape-rendering="crispEdges">${crawlingSpider(st,animated&&cfg.animateSpider)}</g>`;
+ return s+atmosphere('stack',cfg.animateAtmosphere===false?0:t,animated&&cfg.animateAtmosphere!==false);
 }
 const desc=cfg.rows.map(row=>row.title+': '+row.items.map(x=>x.label).join(', ')).join('. ');
 function svg(t,animated=false,layer='full'){
- return `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="img" aria-labelledby="title desc"><title id="title">Minecraft Halloween tech stack</title><desc id="desc">Five bold category signs and twenty fixed pixel-art technology items. ${escape(desc)}. Only Halloween decorations move.</desc>${animated?`<style>${css}</style>`:''}${layer!=='motion'?fixedScene:''}${layer!=='static'?motion(t,animated):''}</svg>`;
+ return `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="img" aria-labelledby="title desc"><title id="title">Minecraft Halloween tech stack</title><desc id="desc">Five bold category signs and twenty fixed pixel-art technology items. ${escape(desc)}. The spider crawls on the shelf, lowers on anchored silk and climbs back with moving legs. Corner webs stay attached to beams and posts. Clouds, bats, leaves, ghost and pumpkin light move; technology labels stay fixed.</desc>${animated?`<style>${css}</style>`:''}${layer!=='motion'?fixedScene:''}${layer!=='static'?motion(t,animated):''}</svg>`;
 }
 await fs.writeFile(path.join(out,'tech-stack.svg'),svg(0,true));
 await fs.writeFile(path.join(out,'tech-stack-static.svg'),svg(0));
@@ -127,13 +124,7 @@ for(let i=0;i<N;i++){
  await sharp(fixed).composite([{input:Buffer.from(svg(i/FPS,false,'motion'))}]).png().toFile(path.join(build,`frame-${String(i).padStart(4,'0')}.png`));
  if(i%20===0)console.log(`Rendered ${i+1}/${N} large-block frames`);
 }
-async function ffmpeg(args){await new Promise((resolve,reject)=>{
- const p=spawn('ffmpeg',['-hide_banner','-loglevel','error',...args],{stdio:['ignore','ignore','pipe']});let error='';
- p.stderr.on('data',d=>{error+=d;});p.on('error',reject);p.on('exit',code=>code===0?resolve():reject(Error(error||'FFmpeg failed')));
-});}
-const input=path.join(build,'frame-%04d.png'),palette=path.join(build,'palette.png');
-await ffmpeg(['-framerate',String(FPS),'-i',input,'-vf','palettegen=stats_mode=full:reserve_transparent=1','-frames:v','1',palette]);
-await ffmpeg(['-framerate',String(FPS),'-i',input,'-i',palette,'-lavfi','paletteuse=dither=none:diff_mode=rectangle','-loop','0','-y',path.join(out,'tech-stack.gif')]);
+await encodeGifFrames(sharp,{directory:build,output:path.join(out,'tech-stack.gif'),width:W,height:H,frames:N,fps:FPS});
 const m=await sharp(path.join(out,'tech-stack.gif'),{animated:true}).metadata();
 if(m.pages!==N||m.loop!==0||m.delay.reduce((a,b)=>a+b,0)!==8000)throw Error('Invalid animation timing.');
 console.log(JSON.stringify({width:W,height:H,frames:m.pages,seconds:T,tools:labelList.length,bytes:(await fs.stat(path.join(out,'tech-stack.gif'))).size}));

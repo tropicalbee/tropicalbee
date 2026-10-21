@@ -8,6 +8,12 @@ A Halloween Minecraft contribution animation. This preview uses tropicalbee's pu
 
 Every tile is one real day. Columns are weeks, rows run Sunday through Saturday, and the five activity levels come directly from GitHub. Slate tiles are inactive days. Copper and amber cubes are active days. Mined ore leaves a lower stone foundation. Mining changes the replay only; the original calendar JSON is retained unchanged.
 
+Plain month captions sit above their week columns, with Mon/Wed/Fri row guides.
+An opening month with too few columns for its caption is omitted rather than
+crowded against the next caption. In this snapshot, the opening October has
+only two columns, so the first caption is November; every October day remains
+in the grid. The final October caption appears at the right edge.
+
 The current snapshot has 367 daily cells from 19 October 2025 through 20 October 2026, including 63 active days. This is the date span returned by the public calendar, including its partial weeks. The loop lasts 24 seconds. The route makes only four-neighbour moves, visits valid day cells and clears every active day once.
 
 The ghost starts at the latest active day. The planner compares several complete tours, improves them with segment reversals and short-block relocation, then smooths equally short paths to reduce turns. Ore encountered en route is mined immediately. Planning is deterministic and always keeps the original nearest-first route as a fallback. This heuristic does not claim a provably shortest tour.
@@ -16,7 +22,7 @@ For the bundled calendar, travel drops from **122 to 100 steps (18% less)**. Rep
 
 ## Reuse and refresh
 
-Requires Node.js 20.9 or newer, Python 3, FFmpeg on your PATH, and `sharp`:
+Requires Node.js 20.9 or newer, Python 3 and `sharp`. Retain the repository's shared `scripts/` folder:
 
 ```sh
 npm install

@@ -1,11 +1,12 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
-import {createRequire} from 'node:module';
-import {spawn} from 'node:child_process';
 import {pixelText,textWidth} from './pixel-font.mjs';
-const require=createRequire(import.meta.url);
-const sharp=require(process.env.CODEX_PRIMARY_RUNTIME_NODE_MODULES?process.env.CODEX_PRIMARY_RUNTIME_NODE_MODULES+'/sharp':'sharp');
+import {loadSharp,encodeGifFrames} from '../../scripts/profile-render-utils.mjs';
+import {ghostShape,ghostEyes,eyeOpen} from '../../resident-section-kit/source/ghost-sprite.mjs';
+import {atmosphere,atmosphereCSS} from '../../scripts/profile-motion.mjs';
+import {spoon,spoonCSS} from './cauldron.mjs';
+const sharp=loadSharp(import.meta.url);
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..'),out=path.join(root,'assets');
 await fs.mkdir(out,{recursive:true});
 const cfg=JSON.parse(await fs.readFile(path.join(root,'garage-config.json'),'utf8'));
@@ -13,8 +14,8 @@ if(!Array.isArray(cfg.lines)||cfg.lines.length!==2||cfg.lines.some(s=>typeof s!=
 if(!/^#[0-9a-f]{6}$/i.test(cfg.textColor))throw Error('Use a six-digit text color.');
 const W=1024,H=384,T=8,FPS=Number(cfg.framesPerSecond??12.5),N=T*FPS,TAU=Math.PI*2;
 if(![10,12.5,20].includes(FPS))throw Error('Use 10, 12.5 or 20 FPS.');
-const bg=await sharp(path.join(root,'source/garage-original.png')).resize(W,H,{kernel:'nearest'}).png().toBuffer();
-await fs.writeFile(path.join(root,'source/garage-background.png'),bg);
+const bg=await sharp(path.join(root,'source/vanilla-actor-original.png')).resize(W,H,{kernel:'nearest'}).png().toBuffer();
+await fs.writeFile(path.join(root,'source/vanilla-background.png'),bg);
 const rgb=await sharp(bg).removeAlpha().raw().toBuffer();
 const bgURI='data:image/png;base64,'+bg.toString('base64');
 const escape=s=>String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;');
@@ -45,7 +46,7 @@ for(const light of lights){
 const liquid=pixelClip([279,201,121,14],(r,g,b)=>g>55&&g>r*1.14&&g>b*1.35);
 if(liquid.count<20)throw Error('Check potion surface coordinates.');
 console.log('potion surface: '+liquid.count+' pixels');
-const particles=[{x:304,unit:2,phase:.04},{x:326,unit:2,phase:.24},{x:350,unit:3,phase:.44},{x:373,unit:1,phase:.64}];
+const particles=[{x:294,unit:3,phase:.04},{x:310,unit:2,phase:.20},{x:326,unit:4,phase:.36},{x:346,unit:3,phase:.52},{x:365,unit:2,phase:.68},{x:382,unit:3,phase:.84}];
 function bubbleState(t,b){
  const phase=(t/4+b.phase)%1;
  const opacity=phase<.68?1:Math.max(0,1-(phase-.68)/.14);
@@ -63,6 +64,10 @@ function keyframes(name,fn,duration=T,n=128){return '@keyframes '+name+'{'+Array
 let css='';
 particles.forEach((b,i)=>{css+=keyframes('bubble'+i,t=>{const s=bubbleState(t,b);return `transform:translate(${s.x}px,${s.y}px) scale(${s.scale.toFixed(3)});opacity:${s.opacity.toFixed(3)}`;})+`.bubble${i}{animation:bubble${i} 8s linear infinite}`;});
 lights.forEach((l,i)=>{css+=keyframes('light'+i,t=>`opacity:${(l.strength*(1-flicker(t,l.phase))).toFixed(3)}`,2,32)+`.light${i}{animation:light${i} 2s linear infinite}`;});
+css+=keyframes('brewerFloat',t=>`transform:translate(${(200+5*Math.sin(TAU*t/8)).toFixed(2)}px,${(275+8*Math.sin(TAU*t/4)).toFixed(2)}px) scale(2.4)`)+'.brewerGhost{animation:brewerFloat 8s linear infinite}';
+css+=keyframes('ghostBlink',t=>`transform:scaleY(${eyeOpen(t).toFixed(3)})`)+'.ghost-eyes{animation:ghostBlink 8s linear infinite}';
+css+=atmosphereCSS('garage');
+css+=spoonCSS;
 css+='@keyframes ripple{to{transform:translateX(92px)}}.ripple{animation:ripple 2s linear infinite}@media(prefers-reduced-motion:reduce){g,rect,path{animation:none!important}}';
 function motion(t,animated=false){
  let s='<defs>'+lights.map((l,i)=>`<clipPath id="core${i}">${l.clip}</clipPath>`).join('')+`<clipPath id="liquid">${liquid.runs}</clipPath></defs>`;
@@ -70,11 +75,13 @@ function motion(t,animated=false){
  const bt=cfg.animateBubbles?t:0;
  s+=`<g clip-path="url(#liquid)"><g class="${animated&&cfg.animateBubbles?'ripple':''}" transform="translate(${(bt%2)/2*92} 0)"><rect x="284" y="208" width="13" height="2" fill="#9ca965" opacity=".58"/></g></g>`;
  particles.forEach((b,i)=>{const p=bubbleState(bt,b);s+=`<g class="${animated&&cfg.animateBubbles?'bubble'+i:''}" transform="translate(${p.x} ${p.y}) scale(${p.scale.toFixed(3)})" opacity="${p.opacity.toFixed(3)}" shape-rendering="crispEdges">${bubbleSprite(b.unit)}</g>`;});
- return s;
+ const gt=cfg.animateGhost===false?0:t;
+ s+=`<g class="${animated&&cfg.animateGhost!==false?'brewerGhost':''}" transform="translate(${(200+5*Math.sin(TAU*gt/8)).toFixed(2)} ${(275+8*Math.sin(TAU*gt/4)).toFixed(2)}) scale(2.4)" shape-rendering="crispEdges">${ghostShape}${ghostEyes(gt,animated&&cfg.animateGhost!==false)}</g>`;
+ return s+spoon(cfg.animateAtmosphere===false?0:t,animated&&cfg.animateAtmosphere!==false)+atmosphere('garage',cfg.animateAtmosphere===false?0:t,animated&&cfg.animateAtmosphere!==false);
 }
 const fullText=cfg.lines.join(' ');
 function svg(t,animated=false,layer='full'){
- return `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="img" aria-labelledby="title desc"><title id="title">${escape(fullText)}</title><desc id="desc">The pale pixel ghost from the Resident stands beside a square iron cauldron that brews green potion over a small fire in a haunted Minecraft garage. Pixel bubbles rise and pop. Three potion bottles, a brewing stand, cobweb, pumpkin and dark doorway surround the still sign. Only bubbles, the potion ripple, fire cores and pumpkin face animate.</desc>${animated?`<style>${css}</style>`:''}${layer!=='motion'?fixed:''}${layer!=='static'?motion(t,animated):''}</svg>`;
+ return `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="img" aria-labelledby="title desc"><title id="title">${escape(fullText)}</title><desc id="desc">The pale pixel ghost from the Resident stands beside a square iron cauldron that brews green potion over a small fire in a haunted Minecraft garage. Pixel bubbles rise and pop. Three potion bottles, a brewing stand, cobweb, pumpkin and dark doorway surround the still sign. The brewer floats and blinks, a spoon stirs, steam curls upward, bubbles rise and pop, and embers lift from the fire. The sign and architecture stay still.</desc>${animated?`<style>${css}</style>`:''}${layer!=='motion'?fixed:''}${layer!=='static'?motion(t,animated):''}</svg>`;
 }
 await fs.writeFile(path.join(out,'garage-brewing.svg'),svg(0,true));
 await fs.writeFile(path.join(out,'garage-brewing-static.svg'),svg(0));
@@ -86,13 +93,7 @@ for(let i=0;i<N;i++){
  await sharp(base).composite([{input:Buffer.from(svg(i/FPS,false,'motion'))}]).png().toFile(path.join(build,`frame-${String(i).padStart(4,'0')}.png`));
  if(i%25===0)console.log(`Rendered ${i+1}/${N} brewing frames`);
 }
-async function ffmpeg(args){await new Promise((resolve,reject)=>{
- const p=spawn('ffmpeg',['-hide_banner','-loglevel','error',...args],{stdio:['ignore','ignore','pipe']});let error='';
- p.stderr.on('data',d=>{error+=d;});p.on('error',reject);p.on('exit',code=>code===0?resolve():reject(Error(error||'FFmpeg failed')));
-});}
-const input=path.join(build,'frame-%04d.png'),palette=path.join(build,'palette.png');
-await ffmpeg(['-framerate',String(FPS),'-i',input,'-vf','palettegen=stats_mode=full:reserve_transparent=1','-frames:v','1',palette]);
-await ffmpeg(['-framerate',String(FPS),'-i',input,'-i',palette,'-lavfi','paletteuse=dither=none:diff_mode=rectangle','-loop','0','-y',path.join(out,'garage-brewing.gif')]);
+await encodeGifFrames(sharp,{directory:build,output:path.join(out,'garage-brewing.gif'),width:W,height:H,frames:N,fps:FPS});
 const m=await sharp(path.join(out,'garage-brewing.gif'),{animated:true}).metadata();
 if(m.pages!==N||m.loop!==0||m.delay.reduce((a,b)=>a+b,0)!==8000)throw Error('Invalid brewing animation timing.');
 console.log(JSON.stringify({width:W,height:H,frames:m.pages,seconds:T,bytes:(await fs.stat(path.join(out,'garage-brewing.gif'))).size}));

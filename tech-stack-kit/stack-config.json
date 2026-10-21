@@ -130,5 +130,6 @@
   ],
   "animateGhost": true,
   "animateSpider": true,
-  "animateCobwebs": true
+  "animateCobwebs": false,
+  "animateAtmosphere": true
 }

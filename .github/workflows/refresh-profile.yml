@@ -64,14 +64,6 @@ jobs:
         # The other four sections are already rendered and need no daily rebuild.
         run: npm install --no-package-lock --no-audit --no-fund
 
-      - name: Install FFmpeg on the runner if needed
-        run: |
-          if ! command -v ffmpeg >/dev/null 2>&1; then
-            sudo apt-get update
-            sudo apt-get install --no-install-recommends -y ffmpeg
-          fi
-          ffmpeg -version
-
       - name: Render the contribution animation
         run: npm run render
 

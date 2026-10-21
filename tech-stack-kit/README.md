@@ -8,7 +8,9 @@ stone and pumpkin-orange palette of the Welcome and Resident sections.
 
 The icons, labels, signs, title, shelves, lanterns and stepped circular moon
 stay still. Pumpkin faces flicker; the shared ghost floats and blinks; the
-charcoal spider lowers on its thread; two full cobweb textures move slightly.
+charcoal spider crawls along the shelf, pauses, lowers on silk and climbs back.
+Its legs articulate as it moves. Two fixed corner webs attach to beams and posts. Flat clouds
+drift, a bat flies overhead and leaves fall along the outer edges.
 Pumpkin bodies and all text stay fixed. There is no marquee.
 
 ## Embed
@@ -26,7 +28,7 @@ embed; choose the PNG for no movement.
 ## Customize
 
 Edit the five titles, labels and local `iconPath` values in `stack-config.json`.
-The category signs use bold bundled pixel lettering on clear golden oak faces.
+The category signs use bold bundled pixel lettering on muted parchment faces.
 The two longer categories have two rows of large item frames and one sign each.
 
 | Category | Default items | Available slots |
@@ -48,13 +50,14 @@ supported. To add more slots, change the layout in `source/render-stack.mjs` and
 give that part of the backdrop enough space.
 
 Disable decorations individually with `animateLights`, `animateGhost`,
-`animateSpider` and `animateCobwebs`. The loop is eight seconds. Supported
+`animateSpider` and `animateAtmosphere`. Webs always remain anchored; the legacy
+`animateCobwebs` setting is no longer used. The loop is eight seconds. Supported
 `framesPerSecond` values are 10, 12.5 and 20; the default is 12.5 (100 frames).
 
 ## Render
 
-Requires Node.js, Sharp and FFmpeg on PATH. Install the declared npm dependency
-using your preferred workflow, then:
+Requires Node.js and Sharp. Retain the repository's shared `scripts/` folder.
+Install the declared npm dependency using your preferred workflow, then:
 
 ```sh
 npm run render

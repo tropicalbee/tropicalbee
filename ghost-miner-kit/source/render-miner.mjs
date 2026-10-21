@@ -1,15 +1,13 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
-import {createRequire} from 'node:module';
-import {spawn} from 'node:child_process';
 import {pixelText,textWidth} from './pixel-font.mjs';
 import {ghostShape,ghostEyes} from './ghost-sprite.mjs';
 import {buildPlan,stateAt} from './route.mjs';
 import {layoutMonthLabels} from './month-labels.mjs';
 
-const require=createRequire(import.meta.url);
-const sharp=require(process.env.CODEX_PRIMARY_RUNTIME_NODE_MODULES?process.env.CODEX_PRIMARY_RUNTIME_NODE_MODULES+'/sharp':'sharp');
+import {loadSharp,encodeGifFrames} from '../../scripts/profile-render-utils.mjs';
+const sharp=loadSharp(import.meta.url);
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..'),out=path.join(root,'assets');
 await fs.mkdir(out,{recursive:true});
 const config=JSON.parse(await fs.readFile(path.join(root,'miner-config.json'),'utf8'));
@@ -22,7 +20,7 @@ await fs.writeFile(path.join(root,'data/mining-route.json'),JSON.stringify({dura
 const r=(x,y,w,h,c)=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${c}"/>`;
 const poly=(points,c)=>`<polygon points="${points}" fill="${c}"/>`;
 const escape=s=>String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;');
-const leftText=(s,x,y,size,c='#ded1ad',shadow=false)=>pixelText(s,x+textWidth(s,size)/2,y,size,c,shadow);
+const leftText=(s,x,y,size,c='#cdd0c6',shadow=false)=>pixelText(s,x+textWidth(s,size)/2,y,size,c,shadow);
 const X=205,Y=218,P=16,R=18,S=3;
 const point=(c,row)=>({x:X+c*P+row*S,y:Y+row*R});
 const colors=[
@@ -47,19 +45,20 @@ function block(level,seed,foundation=false){
  return s+'</g>';
 }
 const order=[...plan.cells].sort((a,b)=>a.r-b.r||a.c-b.c);
-const bg=await sharp(path.join(root,'source/room-original.png')).resize(W,H,{kernel:'nearest'}).png().toBuffer();
-await fs.writeFile(path.join(root,'source/room-background.png'),bg);
+const bg=await sharp(path.join(root,'source/vanilla-original.png')).resize(W,H,{kernel:'nearest'}).png().toBuffer();
+await fs.writeFile(path.join(root,'source/vanilla-background.png'),bg);
 const bgURI='data:image/png;base64,'+bg.toString('base64');
 const monthLabels=layoutMonthLabels(plan.start,plan.weeks,X,P);
-const labels=monthLabels.map(m=>pixelText(m.text,m.center,164,m.size,'#e4d5b6')).join('');
+const labels='<g font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#c8ccc7">'+monthLabels.map(m=>`<text x="${m.left}" y="183" textLength="${m.width}" lengthAdjust="spacingAndGlyphs">${m.text}</text>`).join('')+
+ [[1,'Mon'],[3,'Wed'],[5,'Fri']].map(([row,name])=>`<text x="${X+row*S-12}" y="${Y+row*R+3}" text-anchor="end">${name}</text>`).join('')+'</g>';
 await fs.writeFile(path.join(root,'data/month-labels.json'),JSON.stringify(monthLabels,null,2)+'\n');
 let baseCells='';
 for(const cell of order){const p=point(cell.c,cell.r);baseCells+=`<g class="day" data-date="${cell.date}" data-level="${cell.level}" data-count="${cell.count}" transform="translate(${p.x} ${p.y})"><title>${cell.count} contributions on ${cell.date}</title>${block(0,cell.c+cell.r,cell.level>0)}</g>`;}
-let legend=leftText('Less',913,365,1.2,'#cbbfa2');
+let legend=leftText('Less',913,365,1.2,'#aeb6b2');
 for(let i=0;i<5;i++)legend+=`<g transform="translate(${946+i*18} 373)">${block(i,i)}</g>`;
-legend+=leftText('More',1040,365,1.2,'#cbbfa2');
+legend+=leftText('More',1040,365,1.2,'#aeb6b2');
 const fixed=`<image width="${W}" height="${H}" href="${bgURI}"/>`+
- pixelText(config.heading,640,63,3.8,'#ded1ad',true)+pixelText('CONTRIBUTIONS',640,109,1.8,'#c9b994',true)+
+ pixelText(config.heading,640,63,3.8,'#cdd0c6',true)+pixelText('CONTRIBUTIONS',640,109,1.8,'#aeb6b2',true)+
  labels+`<g shape-rendering="crispEdges">${baseCells}</g>`+legend;
 const raw=await sharp(bg).removeAlpha().raw().toBuffer();
 const lights=[{id:'lantern',box:[156,365,38,32],phase:.2},{id:'torch',box:[1237,315,21,30],phase:1.8}];
@@ -90,7 +89,7 @@ function motion(t){
   s+=r(target.x+7-spread,target.y-8,2,2,'#d3a35b')+r(target.x+11+spread,target.y-12,2,2,'#b87d38')+r(target.x+4,target.y-16,2,2,'#e0bd7c');
  }
  const shown=state.resetProgress>.5?0:state.mined;
- s+=pixelText('MINED '+shown+' OF '+plan.active.length+' ACTIVE DAYS',640,408,1.4,'#ded1ad',true);
+ s+=pixelText('MINED '+shown+' OF '+plan.active.length+' ACTIVE DAYS',640,408,1.4,'#cdd0c6',true);
  lights.forEach((l,i)=>{const [x,y,w,h]=l.box;s+=`<g clip-path="url(#light${i})"><rect x="${x}" y="${y}" width="${w}" height="${h}" fill="#3a2817" opacity="${lightValue(t,l.phase).toFixed(3)}"/></g>`;});
  return s;
 }
@@ -107,13 +106,7 @@ for(let i=0;i<N;i++){
  await sharp(base).composite([{input:Buffer.from(svg(i/FPS,'motion'))}]).png().toFile(path.join(build,`frame-${String(i).padStart(4,'0')}.png`));
  if(i%40===0)console.log(`Rendered ${i+1}/${N} miner frames`);
 }
-async function ffmpeg(args){await new Promise((resolve,reject)=>{
- const p=spawn('ffmpeg',['-hide_banner','-loglevel','error',...args],{stdio:['ignore','ignore','pipe']});let error='';
- p.stderr.on('data',d=>{error+=d;});p.on('error',reject);p.on('exit',code=>code===0?resolve():reject(Error(error||'FFmpeg failed')));
-});}
-const input=path.join(build,'frame-%04d.png'),palette=path.join(build,'palette.png');
-await ffmpeg(['-framerate',String(FPS),'-i',input,'-vf','palettegen=stats_mode=full:reserve_transparent=1','-frames:v','1',palette]);
-await ffmpeg(['-framerate',String(FPS),'-i',input,'-i',palette,'-lavfi','paletteuse=dither=none:diff_mode=rectangle','-loop','0','-y',path.join(out,'ghost-miner.gif')]);
+await encodeGifFrames(sharp,{directory:build,output:path.join(out,'ghost-miner.gif'),width:W,height:H,frames:N,fps:FPS});
 const m=await sharp(path.join(out,'ghost-miner.gif'),{animated:true}).metadata();
 if(m.pages!==N||m.loop!==0||m.delay.reduce((a,b)=>a+b,0)!==T*1000)throw Error('Invalid GIF timing');
 console.log(JSON.stringify({width:W,height:H,frames:m.pages,seconds:T,bytes:(await fs.stat(path.join(out,'ghost-miner.gif'))).size}));

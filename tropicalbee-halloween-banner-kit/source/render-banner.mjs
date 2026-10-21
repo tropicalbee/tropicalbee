@@ -1,14 +1,14 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import {createRequire} from 'node:module';
 import {fileURLToPath} from 'node:url';
-const require=createRequire(import.meta.url);
-const sharp=require(process.env.CODEX_PRIMARY_RUNTIME_NODE_MODULES?process.env.CODEX_PRIMARY_RUNTIME_NODE_MODULES+'/sharp':'sharp');
+import {loadSharp} from '../../scripts/profile-render-utils.mjs';
+import {atmosphere,atmosphereCSS,flatMoon} from '../../scripts/profile-motion.mjs';
+const sharp=loadSharp(import.meta.url);
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const out=path.join(root,'assets');
 await fs.mkdir(out,{recursive:true});
 const cfg=JSON.parse(await fs.readFile(path.join(root,'banner-config.json'),'utf8'));
-const bg=await fs.readFile(path.join(root,'source/background.png'));
+const bg=await fs.readFile(path.join(root,'source/vanilla-background.png'));
 const W=1024,H=342,T=8,N=128,TAU=Math.PI*2;
 const meta=await sharp(bg).metadata();
 if(meta.width!==W||meta.height!==H)throw Error('Update scene coordinates for a different background size.');
@@ -30,7 +30,7 @@ if(!/^#[0-9a-f]{6}$/i.test(cfg.titleColor))throw Error('Use a six-digit title co
 const nameSize=Math.min(7,Math.floor(480/textWidth(cfg.username,1)));
 if(nameSize<2)throw Error('The username is too long for the title area.');
 if(textWidth(cfg.tagline,2)>490)throw Error('Keep the tagline short enough to fit below the name.');
-const staticLayer=pixelText(cfg.username,355,81,nameSize,cfg.titleColor,true)+pixelText(cfg.tagline,355,152,2,'#d1cbb7',true)+pixelText('ENTER',648,228,1.5,'#211a11')+pixelText('THE HOUSE',648,244,1.5,'#211a11')+'<path d="M612 230H615V232H618V234H620V236H618V238H615V240H612Z" fill="#211a11" shape-rendering="crispEdges"/>';
+const staticLayer=flatMoon(734,45)+pixelText(cfg.username,355,81,nameSize,cfg.titleColor,true)+pixelText(cfg.tagline,355,152,2,'#d1cbb7',true)+pixelText('ENTER',648,228,1.5,'#211a11')+pixelText('THE HOUSE',648,244,1.5,'#211a11')+'<path d="M612 230H615V232H618V234H620V236H618V238H615V240H612Z" fill="#211a11" shape-rendering="crispEdges"/>';
 const rawBG=await sharp(bg).removeAlpha().raw().toBuffer();
 const lightSources=[
  {id:'lantern',box:[831,201,15,15],phase:.3,strength:.33},
@@ -50,9 +50,9 @@ for(const light of lightSources){
  light.clip=runs;console.log(light.id+': '+pixels+' animated light-core pixels');
 }
 const flicker=(t,p)=>Math.max(.08,Math.min(1,.54+.38*Math.sin(TAU*t/2+p)+.06*Math.sin(TAU*t/.5+p*2)));
-const spiderAt=t=>[70+.6*Math.sin(TAU*t/8),91+4-4*Math.cos(TAU*t/8)];
-const ghostAt=t=>[753+.8*Math.sin(TAU*t/8),223+1.5*Math.sin(TAU*t/8)];
-const batAt=(t,i)=>i===0?[711+14*Math.sin(TAU*t/8),82+3*Math.cos(TAU*t/8)]:[665+25*Math.cos(TAU*t/8),97+6*Math.sin(TAU*t/4)];
+const spiderAt=t=>[70+4*Math.sin(TAU*t/8),91+18-18*Math.cos(TAU*t/8)];
+const ghostAt=t=>[753+10*Math.sin(TAU*t/8),223+9*Math.sin(TAU*t/8)];
+const batAt=(t,i)=>i===0?[690+60*Math.sin(TAU*t/8),74+12*Math.cos(TAU*t/8)]:[670+50*Math.cos(TAU*t/8),115+14*Math.sin(TAU*t/4)];
 const flapAt=(t,i)=>.35+.65*(.5+.5*Math.cos(TAU*t/1+i));
 const spiderShape=`<g fill="none" stroke="#404043" stroke-width="4" stroke-linejoin="miter"><path d="M-8 -4H-16V-10H-22V-15M-9 1H-19V-4H-25M-8 5H-18V10H-24V16M-6 9H-12V18H-16M8 -4H16V-10H22V-15M9 1H19V-4H25M8 5H18V10H24V16M6 9H12V18H16"/></g><rect x="-11" y="-11" width="22" height="18" fill="#252527"/><path d="M-9 -11H9V-7H-9ZM-11 -7H-7V3H-11Z" fill="#505052"/><rect x="-9" y="5" width="18" height="11" fill="#121214"/><rect x="-7" y="8" width="4" height="4" fill="#ff2020"/><rect x="3" y="8" width="4" height="4" fill="#ff2020"/>`;
 const ghostShape='<path d="M-7 -21H7V-18H12V-13H15V20H9V16H3V21H-3V16H-9V20H-15V-13H-12V-18H-7Z" fill="#d0cdbb"/><path d="M-7 -21H7V-17H-7ZM-12 -17H-7V-11H-12ZM-15 -11H-10V13H-15Z" fill="#e1decb"/><path d="M11 -11H15V19H10V14H7V4H11Z" fill="#b6baa7"/><rect x="-1" y="1" width="3" height="3" fill="#697565"/>';
@@ -62,9 +62,10 @@ function ghostEyes(t,animated){return `<g transform="translate(0 -7)" fill="#273
 function keyframes(name,fn,duration=8,n=128){return '@keyframes '+name+'{'+Array.from({length:n+1},(_,i)=>`${(i*100/n).toFixed(3)}%{${fn(duration*i/n)}}`).join('')+'}';}
 let css='';
 for(const [id,fn] of [['spider',spiderAt],['ghost',ghostAt],['bat0',t=>batAt(t,0)],['bat1',t=>batAt(t,1)]]){css+=keyframes(id,t=>{const [x,y]=fn(t);return `transform:translate(${x.toFixed(2)}px,${y.toFixed(2)}px)`});css+=`.${id}{animation:${id} 8s linear infinite}`;}
-for(let i=0;i<1;i++){css+=keyframes('wing'+i,t=>`transform:scaleY(${flapAt(t,i).toFixed(3)})`,1,16)+`.wing${i}{animation:wing${i} 1s linear infinite}`;}
+for(let i=0;i<2;i++){css+=keyframes('wing'+i,t=>`transform:scaleY(${flapAt(t,i).toFixed(3)})`,1,16)+`.wing${i}{animation:wing${i} 1s linear infinite}`;}
 lightSources.forEach((l,i)=>{css+=keyframes('shade'+i,t=>`opacity:${(l.strength*(1-flicker(t,l.phase))).toFixed(3)}`,2,32)+`.shade${i}{animation:shade${i} 2s linear infinite}`;});
 css+=keyframes('ghostBlink',t=>`transform:scaleY(${eyeOpen(t).toFixed(3)})`)+'.ghost-eyes{animation:ghostBlink 8s linear infinite}';
+css+=atmosphereCSS('banner');
 css+='@media(prefers-reduced-motion:reduce){g,rect,path{animation:none!important}}';
 function motion(t,animated){
  const definitions='<defs>'+lightSources.map((l,i)=>`<clipPath id="light${i}">${l.clip}</clipPath>`).join('')+'</defs>';
@@ -72,12 +73,12 @@ function motion(t,animated){
  let sprites='';
  if(cfg.animateSpider){const[x,y]=spiderAt(t);sprites+=`<g class="${animated?'spider':''}" transform="translate(${x.toFixed(2)} ${y.toFixed(2)})"><path d="M0 -250V-12" stroke="#96938d" stroke-width="1"/>${spiderShape}</g>`;}
  if(cfg.animateGhost){const[x,y]=ghostAt(t);sprites+=`<g class="${animated?'ghost':''}" transform="translate(${x.toFixed(2)} ${y.toFixed(2)})">${ghostShape}${ghostEyes(t,animated)}</g>`;}
- if(cfg.animateBats)for(let i=0;i<1;i++){const[x,y]=batAt(t,i);sprites+=`<g class="${animated?'bat'+i:''}" transform="translate(${x.toFixed(2)} ${y.toFixed(2)})"><g transform="scale(${i===0?1:.8})" fill="#111d1c"><g class="${animated?'wing'+i:''}" transform="scale(1 ${flapAt(t,i).toFixed(3)})"><path d="M-2 0H-6V-4H-10V-8H-15V-4H-12V1H-9V4H-6V2H-2ZM2 0H6V-4H10V-8H15V-4H12V1H9V4H6V2H2Z"/></g><path d="M-3 -5H-1V-7H1V-5H3V4H1V6H-1V4H-3Z"/></g></g>`;}
- return definitions+`<g shape-rendering="crispEdges">${lights}${sprites}</g>`;
+ if(cfg.animateBats)for(let i=0;i<2;i++){const[x,y]=batAt(t,i);sprites+=`<g class="${animated?'bat'+i:''}" transform="translate(${x.toFixed(2)} ${y.toFixed(2)})"><g transform="scale(${i===0?1:.8})" fill="#111d1c"><g class="${animated?'wing'+i:''}" transform="scale(1 ${flapAt(t,i).toFixed(3)})"><path d="M-2 0H-6V-4H-10V-8H-15V-4H-12V1H-9V4H-6V2H-2ZM2 0H6V-4H10V-8H15V-4H12V1H9V4H6V2H2Z"/></g><path d="M-3 -5H-1V-7H1V-5H3V4H1V6H-1V4H-3Z"/></g></g>`;}
+ return definitions+`<g shape-rendering="crispEdges">${atmosphere('banner',cfg.animateAtmosphere===false?0:t,animated&&cfg.animateAtmosphere!==false)}${lights}${sprites}</g>`;
 }
 function svg(t,animated=false,layer='full'){
  const title=escape(cfg.username+' — Come in. Mind the spiders.');
- return `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="img" aria-labelledby="title desc"><title id="title">${title}</title><desc id="desc">A block-built Halloween cottage in oak, cobblestone and forest green beneath a midnight-blue sky. The in-image Enter the House sign marks the game entrance. One bat moves slowly, a spider gently descends, a larger ghost blinks and floats, and pumpkin faces visibly flicker while their skins stay fixed. Link this entire image to the included Markdown adventure.</desc>${animated?`<style>${css}</style>`:''}${layer==='full'?`<image width="${W}" height="${H}" href="data:image/png;base64,${bg.toString('base64')}"/>`:''}${layer!=='motion'?staticLayer:''}${layer!=='static'?motion(t,animated):''}</svg>`;
+ return `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="img" aria-labelledby="title desc"><title id="title">${title}</title><desc id="desc">A block-built Halloween cottage in oak, cobblestone and forest green beneath a midnight-blue sky. The in-image Enter the House sign marks the game entrance. Two bats fly across the sky, flat clouds drift, leaves fall, a spider descends and a ghost bobs and blinks. A flat pixel moon, signs and text stay fixed; pumpkin faces flicker. Link this entire image to the included Markdown adventure.</desc>${animated?`<style>${css}</style>`:''}${layer==='full'?`<image width="${W}" height="${H}" href="data:image/png;base64,${bg.toString('base64')}"/>`:''}${layer!=='motion'?staticLayer:''}${layer!=='static'?motion(t,animated):''}</svg>`;
 }
 await fs.writeFile(path.join(out,'tropicalbee-halloween-animated.svg'),svg(0,true));
 await sharp(Buffer.from(svg(0))).png().toFile(path.join(out,'tropicalbee-halloween-preview.png'));

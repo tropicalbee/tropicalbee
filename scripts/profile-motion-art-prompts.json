@@ -1,0 +1,20 @@
+{
+  "purpose": "Remove baked-in sky objects and brewer so flat sky and moving sprite layers can be rendered.",
+  "edits": [
+    {
+      "name": "banner-sky",
+      "file": "tropicalbee-halloween-banner-kit/source/vanilla-original.png",
+      "prompt": "Use case: precise-object-edit. Edit this existing panoramic Minecraft README background. ONLY remove the 3D cube moon and every cloud from the blue night sky, restoring clean continuous blue-grey night sky behind them. Keep the existing small stars. The moon and moving FLAT clouds will be drawn separately by animation code, so DO NOT draw any moon or cloud yourself. Do not change ANY house, tree, ground, cat, blank entrance sign, pumpkin, lantern, window, texture, lighting, color grading or framing. Keep the exact ultrawide aspect and all object locations. No new text, no creatures, no white borders. This is a sky cleanup for animation, everything below the sky stays unchanged."
+    },
+    {
+      "name": "stack-sky",
+      "file": "tech-stack-kit/source/vanilla-original.png",
+      "prompt": "Use case: precise-object-edit. Edit this exact tall Minecraft tech-stack background. ONLY remove the three-dimensional cuboid clouds from the upper blue night sky. Fill their former positions with the same clean blue-grey sky. Do not add moon or clouds: flat pixel moon and flat animated cloud shapes are separate code layers. Preserve every other pixel area as closely as possible: TECH STACK lettering, all five board compartments, support posts, pumpkins and exact locations of light cores, forest terrain, entire scene framing, coarse matte textures and muted palette. No new text, objects, creatures or white borders. Keep exact 2:3 portrait composition."
+    },
+    {
+      "name": "garage-actor",
+      "file": "garage-section-kit/source/vanilla-original.png",
+      "prompt": "Use case: precise-object-edit. Edit this exact wide Minecraft brewing room. Remove ONLY the pale ghost character standing to the LEFT of the cauldron. Fill the area behind it with the matching stone step/floor and dark wood shelf background. The ghost will be added back as a moving pixel sprite by animation code. Keep EVERYTHING else unchanged: cauldron and potion surface at exact positions, fire, pumpkins, bottles, blank wooden sign, doors, eyes in doorway, lantern, vines, coarse matte stone-and-spruce texture and existing lighting. No new objects or text. Preserve exact wide composition and aspect ratio, no cropping or padding. Do not move or alter cauldron edges."
+    }
+  ]
+}

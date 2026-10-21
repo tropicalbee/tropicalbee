@@ -1,27 +1,15 @@
 [
   {
-    "month": 9,
-    "year": 2025,
-    "startWeek": 0,
-    "endWeek": 2,
-    "text": "Oct",
-    "size": 1.4,
-    "width": 23.799999999999997,
-    "left": 205,
-    "right": 228.8,
-    "center": 216.9
-  },
-  {
     "month": 10,
     "year": 2025,
     "startWeek": 2,
     "endWeek": 7,
     "text": "Nov",
-    "size": 1.4,
-    "width": 23.799999999999997,
+    "size": 16,
+    "width": 30,
     "left": 237,
-    "right": 260.8,
-    "center": 248.9
+    "right": 267,
+    "center": 252
   },
   {
     "month": 11,
@@ -29,11 +17,11 @@
     "startWeek": 7,
     "endWeek": 11,
     "text": "Dec",
-    "size": 1.4,
-    "width": 23.799999999999997,
+    "size": 16,
+    "width": 30,
     "left": 317,
-    "right": 340.8,
-    "center": 328.9
+    "right": 347,
+    "center": 332
   },
   {
     "month": 0,
@@ -41,11 +29,11 @@
     "startWeek": 11,
     "endWeek": 15,
     "text": "Jan",
-    "size": 1.4,
-    "width": 23.799999999999997,
+    "size": 16,
+    "width": 30,
     "left": 381,
-    "right": 404.8,
-    "center": 392.9
+    "right": 411,
+    "center": 396
   },
   {
     "month": 1,
@@ -53,11 +41,11 @@
     "startWeek": 15,
     "endWeek": 19,
     "text": "Feb",
-    "size": 1.4,
-    "width": 23.799999999999997,
+    "size": 16,
+    "width": 30,
     "left": 445,
-    "right": 468.8,
-    "center": 456.9
+    "right": 475,
+    "center": 460
   },
   {
     "month": 2,
@@ -65,11 +53,11 @@
     "startWeek": 19,
     "endWeek": 24,
     "text": "Mar",
-    "size": 1.4,
-    "width": 23.799999999999997,
+    "size": 16,
+    "width": 30,
     "left": 509,
-    "right": 532.8,
-    "center": 520.9
+    "right": 539,
+    "center": 524
   },
   {
     "month": 3,
@@ -77,11 +65,11 @@
     "startWeek": 24,
     "endWeek": 28,
     "text": "Apr",
-    "size": 1.4,
-    "width": 23.799999999999997,
+    "size": 16,
+    "width": 30,
     "left": 589,
-    "right": 612.8,
-    "center": 600.9
+    "right": 619,
+    "center": 604
   },
   {
     "month": 4,
@@ -89,11 +77,11 @@
     "startWeek": 28,
     "endWeek": 33,
     "text": "May",
-    "size": 1.4,
-    "width": 23.799999999999997,
+    "size": 16,
+    "width": 30,
     "left": 653,
-    "right": 676.8,
-    "center": 664.9
+    "right": 683,
+    "center": 668
   },
   {
     "month": 5,
@@ -101,11 +89,11 @@
     "startWeek": 33,
     "endWeek": 37,
     "text": "Jun",
-    "size": 1.4,
-    "width": 23.799999999999997,
+    "size": 16,
+    "width": 30,
     "left": 733,
-    "right": 756.8,
-    "center": 744.9
+    "right": 763,
+    "center": 748
   },
   {
     "month": 6,
@@ -113,11 +101,11 @@
     "startWeek": 37,
     "endWeek": 41,
     "text": "Jul",
-    "size": 1.4,
-    "width": 23.799999999999997,
+    "size": 16,
+    "width": 30,
     "left": 797,
-    "right": 820.8,
-    "center": 808.9
+    "right": 827,
+    "center": 812
   },
   {
     "month": 7,
@@ -125,11 +113,11 @@
     "startWeek": 41,
     "endWeek": 46,
     "text": "Aug",
-    "size": 1.4,
-    "width": 23.799999999999997,
+    "size": 16,
+    "width": 30,
     "left": 861,
-    "right": 884.8,
-    "center": 872.9
+    "right": 891,
+    "center": 876
   },
   {
     "month": 8,
@@ -137,11 +125,11 @@
     "startWeek": 46,
     "endWeek": 50,
     "text": "Sep",
-    "size": 1.4,
-    "width": 23.799999999999997,
+    "size": 16,
+    "width": 30,
     "left": 941,
-    "right": 964.8,
-    "center": 952.9
+    "right": 971,
+    "center": 956
   },
   {
     "month": 9,
@@ -149,10 +137,10 @@
     "startWeek": 50,
     "endWeek": 53,
     "text": "Oct",
-    "size": 1.4,
-    "width": 23.799999999999997,
+    "size": 16,
+    "width": 30,
     "left": 1005,
-    "right": 1028.8,
-    "center": 1016.9
+    "right": 1035,
+    "center": 1020
   }
 ]
