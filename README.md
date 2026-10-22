@@ -1,4 +1,4 @@
-<!-- Keep the six kit folders beside this file in tropicalbee/tropicalbee. -->
+<!-- Keep the seven kit folders beside this file in tropicalbee/tropicalbee. -->
 
 <!-- Keep this stack free of paragraphs and blank lines between sections. -->
 <div align="center">
@@ -27,6 +27,14 @@
     <picture>
       <source media="(prefers-reduced-motion: reduce)" srcset="garage-section-kit/assets/garage-brewing-preview.png">
       <img src="garage-section-kit/assets/garage-brewing.gif" width="1024" align="top" alt="Projects — still brewing in my garage.. Browse my repositories.">
+    </picture>
+  </a>
+</div>
+<div>
+  <a href="stats-section-kit/assets/stats-summary.md" title="Read the archive statistics and their scope">
+    <picture>
+      <source media="(prefers-reduced-motion: reduce)" srcset="stats-section-kit/assets/haunted-archive-preview.png">
+      <img src="stats-section-kit/assets/haunted-archive.gif" width="1024" align="top" alt="The Haunted Archive — issues raised, pull requests, merged PRs, stars, repositories, contributions and longest streak, plus a language pie chart. Contributions and streak cover the past 12 months. Click for current numbers as text.">
     </picture>
   </a>
 </div>
@@ -65,6 +73,7 @@
   </ul>
   <p><strong>Projects:</strong> still brewing in my garage..</p>
   <p><strong>The Trespass Register:</strong> an abandoned cemetery checkpoint. Footprints approach the entrance although nobody is visible. The wooden sign records profile-view requests, not unique visitors. Its saved count refreshes at midnight and noon India time. An invisible counter image records requests between updates.</p>
+  <p><strong>The Haunted Archive:</strong> seven GitHub statistics and a code-language pie chart, refreshed every 12 hours. The longest streak covers the past 12 months. <a href="stats-section-kit/assets/stats-summary.md">Read the current numbers, percentages and scope.</a></p>
   <p><strong>The Ghost Miner:</strong> a nightly snapshot of my public GitHub contribution calendar. Slate is an inactive day; copper and amber mark activity. The ghost mines each active day once before the loop resets.</p>
   <p><strong>The house:</strong> click the signboard in the entrance banner to play The Thirteenth Knock. Every Halloween, Briar House returns to steal another name. Explore two chapters, solve seven puzzles, and uncover six endings as you discover what its caretaker invited inside.</p>
 </details>

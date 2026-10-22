@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "username": "tropicalbee",
+  "fetchedAt": "2026-10-22T18:16:00+00:00",
+  "period": {
+    "start": "2025-10-23",
+    "end": "2026-10-22"
+  },
+  "metrics": {
+    "repositories": 4,
+    "stars": 2,
+    "issues": 1,
+    "pullRequests": 2,
+    "mergedPullRequests": 2,
+    "contributions": 499,
+    "longestStreak": 14
+  },
+  "languages": [
+    {
+      "name": "Jupyter Notebook",
+      "bytes": 1188955
+    },
+    {
+      "name": "JavaScript",
+      "bytes": 493428
+    },
+    {
+      "name": "CSS",
+      "bytes": 82811
+    },
+    {
+      "name": "HTML",
+      "bytes": 12576
+    },
+    {
+      "name": "Python",
+      "bytes": 6725
+    }
+  ],
+  "languageRepositories": [
+    "tropicalbee/DekhoEML",
+    "tropicalbee/EDA_Using_Bivariate_And_Multivariate_Analysis",
+    "tropicalbee/Moonbase-Intern"
+  ],
+  "excludedLanguageRepositories": [
+    "tropicalbee/tropicalbee"
+  ]
+}

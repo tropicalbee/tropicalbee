@@ -25,6 +25,7 @@ for (const script of [
   'resident-section-kit/source/render-resident.mjs',
   'tech-stack-kit/source/render-stack.mjs',
   'garage-section-kit/source/render-garage.mjs',
+  'stats-section-kit/source/render-stats.mjs',
   'ghost-miner-kit/source/render-miner.mjs',
   'trespass-section-kit/source/render-trespasses.mjs',
 ]) {

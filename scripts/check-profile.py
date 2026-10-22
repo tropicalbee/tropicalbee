@@ -64,6 +64,7 @@ def main():
     documents = [
         ROOT / "README.md",
         *sorted(ROOT.glob("*-kit/README.md")),
+        ROOT / "stats-section-kit/assets/stats-summary.md",
         *sorted(ROOT.glob("tropicalbee-halloween-banner-kit/game/*.md")),
     ]
     images = set()
@@ -86,8 +87,10 @@ def main():
         image_size(target)
     section_images = [img for img in profile_images if not urlsplit(img["src"]).scheme]
     counters = [img for img in profile_images if urlsplit(img["src"]).scheme]
-    if len(section_images) != 6:
-        raise ValueError("The profile must include all six illustrated sections")
+    if len(section_images) != 7:
+        raise ValueError("The profile must include all seven illustrated sections")
+    if section_images[4]["src"] != "stats-section-kit/assets/haunted-archive.gif":
+        raise ValueError("The Haunted Archive must sit between the garage and miner")
     if len(counters) != 1:
         raise ValueError("Expected one profile view counter beneath the illustrations")
     counter = urlsplit(counters[0]["src"])
@@ -97,7 +100,7 @@ def main():
     if any(counters[0].get(key) != value for key, value in {"width": "1", "height": "1", "alt": ""}.items()):
         raise ValueError("The request counter must be a decorative 1 by 1 image")
     if profile_images[-1] != counters[0]:
-        raise ValueError("The counter must follow the six illustrated sections")
+        raise ValueError("The counter must follow the seven illustrated sections")
     if section_images[-1]["src"] != "trespass-section-kit/assets/trespass-register.gif":
         raise ValueError("The counter must belong to the Trespass Register scene")
     snapshot = json.loads((ROOT / "trespass-section-kit/data/visitors.json").read_text(encoding="utf-8"))
@@ -117,8 +120,10 @@ def main():
         if img.get("width") != "1024":
             raise ValueError("Profile sections must share a consistent display width")
     total = sum(local_target(ROOT / "README.md", img["src"]).stat().st_size for img in section_images)
+    if total >= 5 * 1024**2:
+        raise ValueError("Seven profile animations exceed the 5 MiB budget")
     print(f"PASS: {len(documents)} documents, {references} local references, {len(images)} image files.")
-    print(f"Six profile animations: {total:,} bytes ({total / 1024**2:.2f} MiB).")
+    print(f"Seven profile animations: {total:,} bytes ({total / 1024**2:.2f} MiB).")
     print("Counter URL and placement validated; external service availability is not checked offline.")
 
 

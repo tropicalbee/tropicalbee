@@ -1,8 +1,8 @@
 # tropicalbee profile setup
 
-The root `README.md` combines six sections: entrance, resident, tech stack,
-projects, contribution miner and the Trespass Register. The original five
-scenes retain their animation and continuous layout. The separate cemetery
+The root `README.md` combines seven sections: entrance, resident, tech stack,
+projects, the Haunted Archive, contribution miner and the Trespass Register.
+The original five scenes retain their animation and continuous layout. The cemetery
 footer embeds a saved visitor count directly in its wooden sign.
 
 Bats fly, leaves fall, ghosts bob, spiders crawl and descend, and pumpkin lights
@@ -16,11 +16,11 @@ month, without removing any contribution days.
 
 1. Use the public repository **`tropicalbee/tropicalbee`**. GitHub displays a
    profile README from a public repository whose name matches the username.
-2. Extract the ZIP. Place its contents at the repository root, keeping the six
+2. Extract the ZIP. Place its contents at the repository root, keeping the seven
    kit folders intact. Include the hidden `.github` folder and `.gitignore`.
    Do not put everything inside an extra enclosing folder.
 3. Review and commit the files yourself, then push them to the default branch.
-   This package has not been published or connected to your account.
+   Local changes appear on the profile after you push them to that repository.
 4. Open **Actions → Refresh profile snapshots → Run workflow**, select the
    default branch, and run it once to verify your repository's configuration.
 5. Confirm the run succeeds and saves a `chore(profile): refresh profile
@@ -28,17 +28,38 @@ month, without removing any contribution days.
 
 See GitHub's [profile README requirements](https://docs.github.com/en/account-and-profile/how-tos/profile-customization/managing-your-profile-readme).
 
+## Commit when the bot has updated the remote
+
+Save the local profile work in a commit first, then replay it on top of the
+remote bot commit before pushing. Run these commands yourself from the root:
+
+```sh
+git status --short --branch
+git add -- README.md SETUP.md .github/workflows/refresh-profile.yml scripts stats-section-kit garage-section-kit/source/pixel-font.mjs
+git commit -m "feat(profile): add haunted archive with ghost and dark cat"
+git pull --rebase origin main
+git push origin main
+```
+
+The explicit staging list includes the new archive, its checks, shared font and
+workflow changes. Render intermediates, dependencies, local previews and ZIPs
+are ignored. The pull retrieves the remote bot commit; a local status report
+can be stale until remote changes are fetched. If rebase reports a conflict,
+resolve the named files before continuing with `git rebase --continue`, then
+push once the rebase finishes. Do not force-push over the bot's work. If a new
+bot commit arrives before the push, repeat the pull/rebase and push commands.
+
 ## Midnight and noon updates
 
 The workflow is `.github/workflows/refresh-profile.yml`.
 
 | Setting | Value |
 | --- | --- |
-| Local time | Register at **00:00 and 12:00 Asia/Kolkata (India Standard Time)**; miner at midnight only |
+| Local time | Register and archive at **00:00 and 12:00 Asia/Kolkata (India Standard Time)**; miner at midnight only |
 | UTC cron | `30 18 * * *` (midnight) and `30 6 * * *` (noon) |
 | Manual trigger | `workflow_dispatch`, on the default branch |
 | Account | `tropicalbee`, from `ghost-miner-kit/miner-config.json` |
-| Data | GitHub's public contribution calendar and Komarev's profile-view counter |
+| Data | GitHub public stats/calendar and Komarev's profile-view counter |
 | Credentials | Built-in `GITHUB_TOKEN`; no personal token or API key needed |
 
 GitHub may queue scheduled jobs, so these are requested trigger times,
@@ -49,9 +70,11 @@ See [GitHub's schedule documentation](https://docs.github.com/en/actions/referen
 
 The job checks local links, game pages and counter fixtures. At midnight (or on
 a manual run), it fetches the public calendar and rebuilds the miner. Every run
-fetches a validated visitor snapshot and rebuilds the register GIF, PNG and SVG.
+fetches validated visitor and GitHub stats snapshots, then rebuilds the register
+and archive images. The archive also refreshes its readable text summary.
 The four other illustrations stay pre-rendered. Only the miner's six generated
-files and the register's JSON snapshot and three finished assets are staged.
+files, the register's four generated files and the archive's five generated
+files are staged.
 The original route baseline remains unchanged.
 
 The prepared workflow commits and pushes those generated files when you
@@ -70,13 +93,13 @@ not a live widget.
 
 - All scene illustrations and room images are stored in the repository.
   An invisible 1 by 1 counter image loads from Komarev;
-  the six scenes, saved count and game remain available if the service fails.
-- Six GIFs total **3.96 MiB**, within the **5 MiB loading budget** enforced by
+  the seven scenes, saved count and game remain available if the service fails.
+- Seven GIFs currently total **4.45 MiB**, within the **5 MiB loading budget** enforced by
   the animation checker. Large editable SVGs and source images are
   not loaded by the normal profile view.
 - Every section uses the same 1024-pixel display width and its original aspect
   ratio; GitHub constrains images to the available page width.
-- The original five illustrations form one continuous stack. Margin-free section blocks
+- The first six illustrations form one continuous stack. Margin-free section blocks
   and top-aligned images remove paragraph spacing and image baseline gaps.
 - Each picture offers the existing still PNG when the viewer supports the
   `prefers-reduced-motion` media query. Still alternatives are larger than GIFs.
@@ -122,6 +145,42 @@ node trespass-section-kit/source/render-trespasses.mjs
 To fetch a fresh count manually (requires network access and adds one hit), run
 `python trespass-section-kit/source/fetch-visitors.py` before rendering.
 
+## The Haunted Archive
+
+The statistics room sits between the garage and miner. An oak records board lists
+issues raised, authored PRs, merged PRs, stars received, owned repositories,
+contributions and longest streak. Contributions and streak use the past twelve
+calendar months; the actual date range is in the linked text summary. The other
+metrics are public lifetime totals or current repository totals, as labelled.
+
+The language pie measures detected bytes across public owned non-fork repositories,
+excluding this profile repository. It does not measure frameworks or proficiency.
+GitHub's Jupyter Notebook category remains separate from Python. The top five
+languages are displayed, with any remaining languages combined as Other.
+
+An eight-second loop animates the resident ghost floating by the doorway, a black
+cat beside the pumpkin, the spider on the beam, lantern light and watching eyes.
+The cat has near-black fur, blue-black edge shading and yellow eyes based on the
+Resident artwork. It blinks and moves its tail with its paws fixed on the floor.
+The ghost uses the Resident sprite. Both characters use small native sprites
+without additional raster assets. The archive cat is a vector interpretation;
+the cat in the Resident section is part of that section's background image.
+The room uses the garage and mine materials, an oak board and a stone-framed
+chart alcove. All lettering uses whole pixel sizes of at least 2. Statistics and
+chart labels remain still. A reduced-motion PNG and a linked generated Markdown
+summary provide readable alternatives. The archive GIF has an 800 KiB limit and
+the seven profile GIFs share the existing 5 MiB limit.
+
+`stats-section-kit/` contains the artwork, snapshot, renderer, configuration and
+exact art prompt. It uses the existing Sharp dependency. The workflow fetches
+the public API using its built-in token, handles repository pagination, checks
+for incomplete results and publishes only after successful fetches and renders.
+The old published snapshot remains if any refresh fails. No external hosting
+is needed. See `stats-section-kit/README.md` for metric definitions and commands.
+
+The first snapshot was fetched locally by the user. Future snapshots are updated
+at midnight and noon IST. The miner retains its midnight-only refresh.
+
 ## The house adventure
 
 **The Thirteenth Knock** is a Halloween horror adventure with 96 game states,
@@ -144,7 +203,7 @@ The six endings include escape, capture, transformation, rescue and sacrifice.
 
 The room artwork is shared across pages, with separate open-chest and cat/no-cat
 variants. Only the visited room and small SVG interface assets load during play;
-the profile loads six section GIFs plus the invisible counter image. The eleven active adventure
+the profile loads seven section GIFs plus the invisible counter image. The eleven active adventure
 illustrations live in `tropicalbee-halloween-banner-kit/assets/adventure/night/`.
 They use dark spruce, grey stone, coarse block textures, cool night shadows and
 small pools of pumpkin light. Grey beveled stone controls match the rooms.
@@ -191,6 +250,8 @@ These checks need only Python and Node, with no package installation:
 python scripts/check-profile.py
 python scripts/check-visitor-counter.py
 node scripts/check-visitor-label.mjs
+python -B scripts/check-archive-data.py
+node scripts/check-archive-model.mjs
 node ghost-miner-kit/source/check-route.mjs
 node ghost-miner-kit/source/check-labels.mjs
 node tropicalbee-halloween-banner-kit/source/check-adventure.mjs
@@ -198,7 +259,7 @@ node tropicalbee-halloween-banner-kit/source/render-adventure.mjs --check
 ```
 
 The animated profile renderer needs the existing `sharp` dependency. One local
-installation in the banner kit can serve all six kits:
+installation in the banner kit can serve all seven kits:
 
 ```sh
 npm install --prefix tropicalbee-halloween-banner-kit --no-package-lock --no-audit --no-fund
@@ -207,11 +268,11 @@ node scripts/check-profile-animation.mjs
 node scripts/check-scene-geometry.mjs
 ```
 
-`render-profile.mjs` rebuilds all six scenes sequentially. The animation check
+`render-profile.mjs` rebuilds all seven scenes sequentially. The animation check
 compares their dimensions, frame counts, individual frame delays and loop
 settings with the pre-restyle baseline, checks visible motion in individual
 scene regions, and checks that signs and lettering remain still. The mining
-route is unchanged; the other scenes deliberately move more. Five scenes loop in
+route is unchanged; the other scenes deliberately move more. Six scenes loop in
 8 seconds; the miner retains its 24-second loop. The resident portrait is also
 preserved. If you intentionally change timing later, review the baseline too.
 

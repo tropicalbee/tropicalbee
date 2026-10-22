@@ -18,6 +18,7 @@ const regions = {
   stack: {moving: [[230, 20, 530, 75], [1140, 870, 110, 170], [145, 510, 95, 155]], still: [[300, 130, 700, 110], [260, 420, 210, 70], [244, 284, 96, 96], [942, 1449, 96, 96]]},
   garage: {moving: [[155, 210, 95, 130], [275, 100, 135, 115]], still: [[460, 105, 355, 90], [280, 216, 120, 30]]},
   trespasses: {moving: [[246, 258, 44, 142]], still: [[494, 125, 365, 75]]},
+  archive: {moving: [[714, 33, 184, 34], [939, 360, 67, 108], [174, 502, 32, 49]], still: [[150, 212, 410, 232], [636, 209, 218, 260], [131, 546, 44, 6]]},
 };
 function changedPixels(a, b, width, [x, y, w, h], threshold = 24) {
   let changed = 0;
@@ -57,8 +58,8 @@ for (const section of baseline.sections) {
   if (section.name !== 'portrait') profileBytes += size;
   console.log(`PASS ${section.name}: ${section.frames} frames, ${size.toLocaleString()} bytes; motion and readable regions checked.`);
 }
-assert(profileBytes < 5 * 1024 * 1024, 'Six profile GIFs exceed the 5 MiB loading budget');
+assert(profileBytes < 5 * 1024 * 1024, 'Seven profile GIFs exceed the 5 MiB loading budget');
 for (const [file, expected] of Object.entries(baseline.preservedFiles)) {
   assert.equal(hash(await fs.readFile(new URL(file, root))), expected, `${file}: mining route changed`);
 }
-console.log(`PASS: seven GIFs retain dimensions, frame counts, exact delays and loops. Mining route unchanged. Six profile GIFs: ${(profileBytes / 1024 / 1024).toFixed(2)} MiB; including portrait: ${bytes.toLocaleString()} bytes.`);
+console.log(`PASS: eight GIFs retain dimensions, frame counts, exact delays and loops. Mining route unchanged. Seven profile GIFs: ${(profileBytes / 1024 / 1024).toFixed(2)} MiB; including portrait: ${bytes.toLocaleString()} bytes.`);

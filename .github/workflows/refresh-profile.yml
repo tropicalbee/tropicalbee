@@ -4,7 +4,7 @@ on:
   schedule:
     # 18:30 UTC = 00:00 Asia/Kolkata (IST), every night.
     - cron: "30 18 * * *"
-    # 06:30 UTC = 12:00 Asia/Kolkata; refresh only the register at noon.
+    # 06:30 UTC = 12:00 Asia/Kolkata; refresh the register and archive at noon.
     - cron: "30 6 * * *"
   workflow_dispatch:
 
@@ -73,8 +73,20 @@ jobs:
         working-directory: .
         run: python trespass-section-kit/source/fetch-visitors.py
 
+      - name: Check archive calculations
+        working-directory: .
+        run: |
+          python scripts/check-archive-data.py
+          node scripts/check-archive-model.mjs
+
+      - name: Fetch public archive statistics
+        working-directory: .
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: python stats-section-kit/source/fetch-stats.py
+
       - name: Install the shared image renderer
-        # Both renderers use the banner kit's pinned Sharp dependency.
+        # All three renderers use the banner kit's pinned Sharp dependency.
         working-directory: tropicalbee-halloween-banner-kit
         run: npm install --no-package-lock --no-audit --no-fund
 
@@ -86,9 +98,15 @@ jobs:
         working-directory: .
         run: node trespass-section-kit/source/render-trespasses.mjs
 
+      - name: Render the haunted archive
+        working-directory: .
+        run: node stats-section-kit/source/render-stats.mjs
+
       - name: Validate the assembled profile
         working-directory: .
-        run: python scripts/check-profile.py
+        run: |
+          python scripts/check-profile.py
+          node scripts/check-archive-model.mjs --assets
 
       - name: Save refreshed profile snapshots
         working-directory: .
@@ -107,7 +125,12 @@ jobs:
             trespass-section-kit/data/visitors.json \
             trespass-section-kit/assets/trespass-register.gif \
             trespass-section-kit/assets/trespass-register-preview.png \
-            trespass-section-kit/assets/trespass-register.svg
+            trespass-section-kit/assets/trespass-register.svg \
+            stats-section-kit/data/stats.json \
+            stats-section-kit/assets/haunted-archive.gif \
+            stats-section-kit/assets/haunted-archive-preview.png \
+            stats-section-kit/assets/haunted-archive.svg \
+            stats-section-kit/assets/stats-summary.md
           if git diff --cached --quiet; then
             echo "No profile snapshot changes to publish."
             exit 0
