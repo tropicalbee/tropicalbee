@@ -6,5 +6,6 @@
   "animateSpider": true,
   "animateBats": true,
   "animateGhost": true,
+  "animateHand": true,
   "animateAtmosphere": true
 }

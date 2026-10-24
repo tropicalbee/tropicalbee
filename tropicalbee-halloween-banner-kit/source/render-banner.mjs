@@ -30,7 +30,8 @@ if(!/^#[0-9a-f]{6}$/i.test(cfg.titleColor))throw Error('Use a six-digit title co
 const nameSize=Math.min(7,Math.floor(480/textWidth(cfg.username,1)));
 if(nameSize<2)throw Error('The username is too long for the title area.');
 if(textWidth(cfg.tagline,2)>490)throw Error('Keep the tagline short enough to fit below the name.');
-const staticLayer=flatMoon(734,45)+pixelText(cfg.username,355,81,nameSize,cfg.titleColor,true)+pixelText(cfg.tagline,355,152,2,'#d1cbb7',true)+pixelText('ENTER',648,228,1.5,'#211a11')+pixelText('THE HOUSE',648,244,1.5,'#211a11')+'<path d="M612 230H615V232H618V234H620V236H618V238H615V240H612Z" fill="#211a11" shape-rendering="crispEdges"/>';
+const signLettering=pixelText('ENTER',648,228,1.5,'#211a11')+pixelText('THE HOUSE',648,244,1.5,'#211a11')+'<path d="M612 230H615V232H618V234H620V236H618V238H615V240H612Z" fill="#211a11" shape-rendering="crispEdges"/>';
+const staticLayer=flatMoon(734,45)+pixelText(cfg.username,355,81,nameSize,cfg.titleColor,true)+pixelText(cfg.tagline,355,152,2,'#d1cbb7',true)+signLettering;
 const rawBG=await sharp(bg).removeAlpha().raw().toBuffer();
 const lightSources=[
  {id:'lantern',box:[831,201,15,15],phase:.3,strength:.33},
@@ -58,6 +59,20 @@ const spiderShape=`<g fill="none" stroke="#404043" stroke-width="4" stroke-linej
 const ghostShape='<path d="M-7 -21H7V-18H12V-13H15V20H9V16H3V21H-3V16H-9V20H-15V-13H-12V-18H-7Z" fill="#d0cdbb"/><path d="M-7 -21H7V-17H-7ZM-12 -17H-7V-11H-12ZM-15 -11H-10V13H-15Z" fill="#e1decb"/><path d="M11 -11H15V19H10V14H7V4H11Z" fill="#b6baa7"/><rect x="-1" y="1" width="3" height="3" fill="#697565"/>';
 const eyeOpen=t=>{let b=0;for(const c of [2.75,6.75]){const d=Math.abs(t-c);if(d<.22)b=Math.max(b,1-d/.22);}return Math.max(.12,1-b);};
 function ghostEyes(t,animated){return `<g transform="translate(0 -7)" fill="#27312b"><g class="${animated?'ghost-eyes':''}" transform="scale(1 ${eyeOpen(t).toFixed(3)})"><rect x="-7" y="-3" width="4" height="6"/><rect x="4" y="-3" width="4" height="6"/></g></g>`;}
+// Two short bursts of three taps per loop, on whole frames. Between bursts the
+// hand rests just above the board; each strike dips the sign, which springs back.
+const tapStarts=[24,88],tapHand=[-2,9,4,1,9,4,1,9,4,2],tapSign=[0,2,-1,0,2,-1,0,2,-1,0];
+const tapAt=t=>{const frame=Math.round(t*N/T)%N;for(const start of tapStarts){const k=frame-start;if(k>=0&&k<tapHand.length)return [tapHand[k],tapSign[k]];}return [0,0];};
+// Bone-coloured skeleton hand on a 1px grid; its fingertip lands right of ENTER.
+const handAt=[677,198],handInk={H:'#e6dfc6',B:'#cbc3a5',S:'#968f76'};
+const handShape=['...BS...BS...','...BS...BS...','...BS...BS...','..HBBBBBBBS..','..HBBBBBBBS..','..H.B.B.B.S..','..H.B.B.B.S..','..HBBBBBBBS..','..HB.BS.BS...','..HB.BS.BS...','..HB.SS.SS...','..HB.........','..HB.........','..SS.........','..HB.........','..HB.........','..SS.........','..HB.........','...B.........']
+ .map((row,y)=>[...row].map((ink,x)=>ink==='.'?'':`<rect x="${x}" y="${y}" width="1" height="1" fill="${handInk[ink]}"/>`).join('')).join('');
+// The board belongs to the backdrop, so a copy of it carries the lettering while
+// the rows just above and below fill the strip it uncovers.
+const [bx,by,bw,bh]=[602,219,90,39],dip=Math.max(...tapSign),rebound=-Math.min(...tapSign);
+const crop=async(x,y,w,h)=>'data:image/png;base64,'+(await sharp(bg).extract({left:x,top:y,width:w,height:h}).png().toBuffer()).toString('base64');
+const boardFill=`<image x="${bx}" y="${by}" width="${bw}" height="${dip}" href="${await crop(bx,by-dip,bw,dip)}"/><image x="${bx}" y="${by+bh-rebound}" width="${bw}" height="${rebound}" href="${await crop(bx,by+bh,bw,rebound)}"/>`;
+const boardCopy=`<image x="${bx}" y="${by}" width="${bw}" height="${bh}" href="${await crop(bx,by,bw,bh)}"/>${signLettering}`;
 
 function keyframes(name,fn,duration=8,n=128){return '@keyframes '+name+'{'+Array.from({length:n+1},(_,i)=>`${(i*100/n).toFixed(3)}%{${fn(duration*i/n)}}`).join('')+'}';}
 let css='';
@@ -65,6 +80,10 @@ for(const [id,fn] of [['spider',spiderAt],['ghost',ghostAt],['bat0',t=>batAt(t,0
 for(let i=0;i<2;i++){css+=keyframes('wing'+i,t=>`transform:scaleY(${flapAt(t,i).toFixed(3)})`,1,16)+`.wing${i}{animation:wing${i} 1s linear infinite}`;}
 lightSources.forEach((l,i)=>{css+=keyframes('shade'+i,t=>`opacity:${(l.strength*(1-flicker(t,l.phase))).toFixed(3)}`,2,32)+`.shade${i}{animation:shade${i} 2s linear infinite}`;});
 css+=keyframes('ghostBlink',t=>`transform:scaleY(${eyeOpen(t).toFixed(3)})`)+'.ghost-eyes{animation:ghostBlink 8s linear infinite}';
+if(cfg.animateHand!==false){
+ css+=keyframes('tapHand',t=>`transform:translate(${handAt[0]}px,${handAt[1]+tapAt(t)[0]}px)`)+'.tapHand{animation:tapHand 8s step-end infinite}';
+ css+=keyframes('tapSign',t=>`transform:translate(0px,${tapAt(t)[1]}px)`)+'.tapSign{animation:tapSign 8s step-end infinite}';
+}
 css+=atmosphereCSS('banner');
 css+='@media(prefers-reduced-motion:reduce){g,rect,path{animation:none!important}}';
 function motion(t,animated){
@@ -74,11 +93,18 @@ function motion(t,animated){
  if(cfg.animateSpider){const[x,y]=spiderAt(t);sprites+=`<g class="${animated?'spider':''}" transform="translate(${x.toFixed(2)} ${y.toFixed(2)})"><path d="M0 -250V-12" stroke="#96938d" stroke-width="1"/>${spiderShape}</g>`;}
  if(cfg.animateGhost){const[x,y]=ghostAt(t);sprites+=`<g class="${animated?'ghost':''}" transform="translate(${x.toFixed(2)} ${y.toFixed(2)})">${ghostShape}${ghostEyes(t,animated)}</g>`;}
  if(cfg.animateBats)for(let i=0;i<2;i++){const[x,y]=batAt(t,i);sprites+=`<g class="${animated?'bat'+i:''}" transform="translate(${x.toFixed(2)} ${y.toFixed(2)})"><g transform="scale(${i===0?1:.8})" fill="#111d1c"><g class="${animated?'wing'+i:''}" transform="scale(1 ${flapAt(t,i).toFixed(3)})"><path d="M-2 0H-6V-4H-10V-8H-15V-4H-12V1H-9V4H-6V2H-2ZM2 0H6V-4H10V-8H15V-4H12V1H9V4H6V2H2Z"/></g><path d="M-3 -5H-1V-7H1V-5H3V4H1V6H-1V4H-3Z"/></g></g>`;}
- return definitions+`<g shape-rendering="crispEdges">${atmosphere('banner',cfg.animateAtmosphere===false?0:t,animated&&cfg.animateAtmosphere!==false)}${lights}${sprites}</g>`;
+ let sign='';
+ if(cfg.animateHand!==false){
+  const[press,bounce]=tapAt(t);
+  // Frames at rest keep the static sign; only a displaced board is redrawn.
+  if(animated||bounce)sign=boardFill+`<g class="${animated?'tapSign':''}" transform="translate(0 ${bounce})">${boardCopy}</g>`;
+  sprites+=`<g class="${animated?'tapHand':''}" transform="translate(${handAt[0]} ${handAt[1]+press})">${handShape}</g>`;
+ }
+ return definitions+`<g shape-rendering="crispEdges">${sign}${atmosphere('banner',cfg.animateAtmosphere===false?0:t,animated&&cfg.animateAtmosphere!==false)}${lights}${sprites}</g>`;
 }
 function svg(t,animated=false,layer='full'){
  const title=escape(cfg.username+' — Come in. Mind the spiders.');
- return `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="img" aria-labelledby="title desc"><title id="title">${title}</title><desc id="desc">A block-built Halloween cottage in oak, cobblestone and forest green beneath a midnight-blue sky. The in-image Enter the House sign marks the game entrance. Two bats fly across the sky, flat clouds drift, leaves fall, a spider descends and a ghost bobs and blinks. A flat pixel moon, signs and text stay fixed; pumpkin faces flicker. Link this entire image to the included Markdown adventure.</desc>${animated?`<style>${css}</style>`:''}${layer==='full'?`<image width="${W}" height="${H}" href="data:image/png;base64,${bg.toString('base64')}"/>`:''}${layer!=='motion'?staticLayer:''}${layer!=='static'?motion(t,animated):''}</svg>`;
+ return `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="img" aria-labelledby="title desc"><title id="title">${title}</title><desc id="desc">A block-built Halloween cottage in oak, cobblestone and forest green beneath a midnight-blue sky. The in-image Enter the House sign marks the game entrance. Two bats fly across the sky, flat clouds drift, leaves fall, a spider descends and a ghost bobs and blinks. A skeleton hand rests above the Enter the House sign and taps it in two short bursts per loop; the sign bounces on each tap. A flat pixel moon and the title text stay fixed; pumpkin faces flicker. Link this entire image to the included Markdown adventure.</desc>${animated?`<style>${css}</style>`:''}${layer==='full'?`<image width="${W}" height="${H}" href="data:image/png;base64,${bg.toString('base64')}"/>`:''}${layer!=='motion'?staticLayer:''}${layer!=='static'?motion(t,animated):''}</svg>`;
 }
 await fs.writeFile(path.join(out,'tropicalbee-halloween-animated.svg'),svg(0,true));
 await sharp(Buffer.from(svg(0))).png().toFile(path.join(out,'tropicalbee-halloween-preview.png'));
