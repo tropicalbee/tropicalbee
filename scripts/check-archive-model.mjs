@@ -21,6 +21,8 @@ assert.deepEqual(languageSlices([]),[]);
 const single=languageSlices([{name:'Python',bytes:15}]);
 assert.equal(single[0].fraction,1);
 assert.equal(single[0].percent,'100.0');
+const notebooks=languageSlices([{name:'Jupyter Notebook',bytes:666},{name:'JavaScript',bytes:330},{name:'Python',bytes:4}]);
+assert.deepEqual(notebooks.map(l=>[l.name,l.bytes,l.percent]),[['Python',670,'67.0'],['JavaScript',330,'33.0']],'Notebooks must merge into one Python row');
 for(const values of [[1,1,1],[100,7,1,1,1,1,1,1],[9999999,1]]){
  const slices=languageSlices(values.map((bytes,i)=>({name:`Language ${i}`,bytes})));
  assert.equal(slices.reduce((n,l)=>n+Math.round(Number(l.percent)*10),0),1000);
@@ -33,7 +35,7 @@ if(real.fetchedAt){
  assert.throws(()=>validateSnapshot({...real,languages:[{name:'Python',bytes:-1}]}));
  assert.throws(()=>validateSnapshot({...real,metrics:{...real.metrics,mergedPullRequests:real.metrics.pullRequests+1}}));
 }
-console.log('PASS: saved/pending stats, zero data, one-slice pie, grouping, exact rounded percentages and invalid snapshots.');
+console.log('PASS: saved/pending stats, zero data, one-slice pie, notebooks as Python, grouping, exact rounded percentages and invalid snapshots.');
 if(process.argv.includes('--assets')){
  const svg=await fs.readFile(new URL('../stats-section-kit/assets/haunted-archive.svg',import.meta.url),'utf8');
  const summary=await fs.readFile(new URL('../stats-section-kit/assets/stats-summary.md',import.meta.url),'utf8');
@@ -43,5 +45,6 @@ if(process.argv.includes('--assets')){
   assert(summary.includes(`**${label}:** ${value}`),`Text summary mismatch for ${label}`);
  }
  for(const slice of languageSlices(real.languages)??[])assert(summary.includes(`${slice.name}: ${slice.percent}%`));
+ assert(!summary.includes('- Jupyter Notebook:'),'Notebooks must not have their own summary row');
  console.log('PASS: rendered SVG and accessible text summary match the saved snapshot.');
 }

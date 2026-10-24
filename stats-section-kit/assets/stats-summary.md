@@ -12,11 +12,10 @@ Updated 2026-10-22T18:16:00+00:00.
 
 ## Languages used
 
-- Jupyter Notebook: 66.6%
+- Python: 67.0%
 - JavaScript: 27.7%
 - CSS: 4.6%
 - HTML: 0.7%
-- Python: 0.4%
 
-Language percentages measure code bytes in owned public non-fork repositories, excluding the profile repository. They do not measure proficiency or individual authorship.
+Language percentages measure code bytes in owned public non-fork repositories, excluding the profile repository. They do not measure proficiency or individual authorship. Jupyter Notebook bytes are counted as Python.
 Contribution window: 2025-10-23 through 2026-10-22, using GitHub calendar dates.

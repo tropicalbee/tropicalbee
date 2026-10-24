@@ -26,9 +26,13 @@ export function validateSnapshot(s){
   return s;
 }
 const colors=['#aa7547','#dab565','#5c6570','#708453','#b6baa7','#79654d'];
+// GitHub reports notebooks as their own language; the archive counts them as Python.
+const languageAliases={'Jupyter Notebook':'Python'};
 export function languageSlices(languages){
   if(languages===null)return null;
-  const sorted=[...languages].sort((a,b)=>b.bytes-a.bytes||a.name.localeCompare(b.name));
+  const merged=new Map();
+  for(const l of languages){const name=languageAliases[l.name]??l.name;merged.set(name,(merged.get(name)??0)+l.bytes);}
+  const sorted=[...merged].map(([name,bytes])=>({name,bytes})).sort((a,b)=>b.bytes-a.bytes||a.name.localeCompare(b.name));
   const groups=sorted.slice(0,5);
   if(sorted.length>5)groups.push({name:'Other',bytes:sorted.slice(5).reduce((sum,l)=>sum+l.bytes,0)});
   const total=groups.reduce((sum,l)=>sum+l.bytes,0);
