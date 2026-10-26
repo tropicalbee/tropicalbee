@@ -24,7 +24,9 @@ const layouts=[
  {ys:[560,691],signY:690,size:104,icon:80,capacity:6},
  {ys:[894],signY:966,size:112,icon:88,capacity:3},
  {ys:[1114,1260],signY:1246,size:112,icon:88,capacity:6},
- {ys:[1465],signY:1542,size:120,icon:96,capacity:2}
+ // The last bay ends at a corner web: three frames sit left of it, with the
+ // short Codex label between the two long ones so no labels touch.
+ {ys:[1469],signY:1542,size:112,icon:88,capacity:3,centers:[570,728,885]}
 ];
 function categorySign(label,cy){
  const x=245,y=cy-45,w=235,h=90;
@@ -52,7 +54,7 @@ for(let i=0;i<5;i++){
  const groups=p.ys.length===2?[row.items.slice(0,3),row.items.slice(3)]:[row.items];
  for(let g=0;g<groups.length;g++){
   const items=groups[g];
-  const centers=items.length===1?[735]:items.length===2?[650,870]:items.length===3?[545,735,925]:[535,665,795,925];
+  const centers=p.centers?.length===items.length?p.centers:items.length===1?[735]:items.length===2?[650,870]:items.length===3?[545,735,925]:[535,665,795,925];
   for(let j=0;j<items.length;j++){
    const item=items[j],cx=centers[j],y=p.ys[g];
    const file=path.resolve(root,item.iconPath||'');
@@ -112,7 +114,7 @@ function motion(t,animated=false){
 }
 const desc=cfg.rows.map(row=>row.title+': '+row.items.map(x=>x.label).join(', ')).join('. ');
 function svg(t,animated=false,layer='full'){
- return `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="img" aria-labelledby="title desc"><title id="title">Minecraft Halloween tech stack</title><desc id="desc">Five bold category signs and twenty fixed pixel-art technology items. ${escape(desc)}. The spider crawls on the shelf, lowers on anchored silk and climbs back with moving legs. Corner webs stay attached to beams and posts. Clouds, bats, leaves, ghost and pumpkin light move; technology labels stay fixed.</desc>${animated?`<style>${css}</style>`:''}${layer!=='motion'?fixedScene:''}${layer!=='static'?motion(t,animated):''}</svg>`;
+ return `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="img" aria-labelledby="title desc"><title id="title">Minecraft Halloween tech stack</title><desc id="desc">Five bold category signs and twenty-one fixed pixel-art technology items. ${escape(desc)}. The spider crawls on the shelf, lowers on anchored silk and climbs back with moving legs. Corner webs stay attached to beams and posts. Clouds, bats, leaves, ghost and pumpkin light move; technology labels stay fixed.</desc>${animated?`<style>${css}</style>`:''}${layer!=='motion'?fixedScene:''}${layer!=='static'?motion(t,animated):''}</svg>`;
 }
 await fs.writeFile(path.join(out,'tech-stack.svg'),svg(0,true));
 await fs.writeFile(path.join(out,'tech-stack-static.svg'),svg(0));

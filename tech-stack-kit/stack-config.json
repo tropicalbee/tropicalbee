@@ -116,6 +116,11 @@
       "title": "AI ASSISTANTS",
       "items": [
         {
+          "label": "Claude Code",
+          "icon": "claude-code",
+          "iconPath": "source/pixel-icons/claude-code.png"
+        },
+        {
           "label": "Codex",
           "icon": "codex",
           "iconPath": "source/pixel-icons/codex.png"

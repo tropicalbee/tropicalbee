@@ -1,8 +1,8 @@
 # Minecraft Halloween Tech Stack
 
-![Languages: Python, C++, HTML, CSS. Frameworks: PyTorch, FastAPI, Streamlit, scikit-learn, LangChain, LangGraph. Databases: Firebase, ChromaDB, Supabase. Tools: Git, GitHub, Docker, VS Code, Jupyter. AI Assistants: Codex, Antigravity.](assets/tech-stack.gif)
+![Languages: Python, C++, HTML, CSS. Frameworks: PyTorch, FastAPI, Streamlit, scikit-learn, LangChain, LangGraph. Databases: Firebase, ChromaDB, Supabase. Tools: Git, GitHub, Docker, VS Code, Jupyter. AI Assistants: Claude Code, Codex, Antigravity.](assets/tech-stack.gif)
 
-Five readable category signs, twenty large pixel-art technology sprites, and a
+Five readable category signs, twenty-one large pixel-art technology sprites, and a
 haunted Minecraft forest. The display uses the dark oak, midnight navy, cream
 stone and pumpkin-orange palette of the Welcome and Resident sections.
 
@@ -37,7 +37,7 @@ The two longer categories have two rows of large item frames and one sign each.
 | Frameworks | PyTorch, FastAPI, Streamlit, scikit-learn, LangChain, LangGraph | 6 |
 | Databases | Firebase, ChromaDB, Supabase | 3 |
 | Tools | Git, GitHub, Docker, VS Code, Jupyter | 6 |
-| AI Assistants | Codex, Antigravity | 2 |
+| AI Assistants | Claude Code, Codex, Antigravity | 3 |
 
 Replace an item with your own local PNG or SVG:
 
@@ -76,12 +76,16 @@ source atlas is also included. To regenerate those cutouts:
 npm run prepare:sprites
 ```
 
+`claude-code.png` is not part of the atlas, so this command leaves it unchanged.
+It traces the official Claude Code mark block for block (16 by 10 blocks, 5
+pixels each) in an 88-pixel square, so its frame shows it without resampling.
+
 The sprites are custom pixel-art interpretations of the technology symbols,
 with chunky shapes and flat color clusters. The backdrop and sprites were
 generated from the supplied visual references. This kit includes the artwork,
 fonts, sprites and renderers locally; no API key, image-generation service or
 network request is needed to regenerate it. The common TECH STACK heading is
-part of the backdrop; the five category titles and all twenty labels remain
+part of the backdrop; the five category titles and all twenty-one labels remain
 editable in the config.
 
 Each render preserves its own intermediate PNG frames in a separate `build`

@@ -21,4 +21,10 @@ Extract/recreate one chunky Minecraft cobweb from the reference beside the Langu
 
 Create a tall 2:3 version of the supplied outdoor Minecraft display, intended 1280 by 1920. Preserve its large block construction, dark oak, midnight navy sky, nearly-black forest, cracked stone pillars and heavy stone TECH STACK title. Use exactly five bays followed by solid stone foundation. Bays two and four are substantially taller for two rows of large items. Leave all back walls bare dark oak for editable signs and frames. Keep four carved pumpkins at the upper beam ends, outside left of bay three and outside right of bay five, with small gold carved cores. Hang two small amber lanterns below the top beam. Reserve upper-left sky for a native stepped circular moon. Do not add any other text, signs, frames, icons, ghosts, spiders or webs to the backdrop. Avoid fog, purple glow, sparkles, books, skulls, UI panels and extra shelves.
 
-The five readable category signs, twenty frames and labels, moon and animations are added in editable source. Ghost and spider assets are shared with the earlier Welcome and Resident sections.
+## Claude Code sprite
+
+`pixel-icons/claude-code.png` is not generated. It traces the official Claude Code mark (#D97757) onto its own 16 by 10 block grid, drawn 5 pixels per block with lighter top-left and darker bottom-right edge blocks, like the atlas sprites. The eyes remain transparent.
+
+## Assembly
+
+The five readable category signs, twenty-one frames and labels, moon and animations are added in editable source. Ghost and spider assets are shared with the earlier Welcome and Resident sections.
