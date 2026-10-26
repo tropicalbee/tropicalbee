@@ -19,7 +19,7 @@
 <div>
   <picture>
     <source media="(prefers-reduced-motion: reduce)" srcset="tech-stack-kit/assets/tech-stack-preview.png">
-    <img src="tech-stack-kit/assets/tech-stack.gif" width="1024" align="top" alt="Tech stack — Python, C++, HTML, CSS; PyTorch, FastAPI, Streamlit, scikit-learn, LangChain, LangGraph; Firebase, ChromaDB, Supabase; Git, GitHub, Docker, VS Code, Jupyter; Claude Code, Codex and Antigravity.">
+    <img src="tech-stack-kit/assets/tech-stack.gif" width="1024" align="top" alt="Tech stack — Python, C++, HTML, CSS; PyTorch, FastAPI, Streamlit, scikit-learn, LangChain, LangGraph; PostgreSQL, ChromaDB; Git, GitHub, Docker, VS Code, Jupyter; Claude Code, Codex and Antigravity.">
   </picture>
 </div>
 <div>
@@ -67,9 +67,9 @@
   <ul>
     <li><strong>Languages:</strong> Python, C++, HTML, CSS.</li>
     <li><strong>Frameworks:</strong> PyTorch, FastAPI, Streamlit, scikit-learn, LangChain, LangGraph.</li>
-    <li><strong>Databases:</strong> Firebase, ChromaDB, Supabase.</li>
+    <li><strong>Databases:</strong> PostgreSQL, ChromaDB.</li>
     <li><strong>Tools:</strong> Git, GitHub, Docker, VS Code, Jupyter.</li>
-    <li><strong>AI assistants:</strong> Claude Code, Codex, Antigravity.</li>
+    <li><strong>AI coding agents:</strong> Claude Code, Codex, Antigravity.</li>
   </ul>
   <p><strong>Projects:</strong> still brewing in my garage..</p>
   <p><strong>The Trespass Register:</strong> an abandoned cemetery checkpoint. Footprints approach the entrance although nobody is visible. The wooden sign records profile-view requests, not unique visitors. Its saved count refreshes at midnight and noon India time. An invisible counter image records requests between updates.</p>

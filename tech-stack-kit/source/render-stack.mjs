@@ -114,7 +114,7 @@ function motion(t,animated=false){
 }
 const desc=cfg.rows.map(row=>row.title+': '+row.items.map(x=>x.label).join(', ')).join('. ');
 function svg(t,animated=false,layer='full'){
- return `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="img" aria-labelledby="title desc"><title id="title">Minecraft Halloween tech stack</title><desc id="desc">Five bold category signs and twenty-one fixed pixel-art technology items. ${escape(desc)}. The spider crawls on the shelf, lowers on anchored silk and climbs back with moving legs. Corner webs stay attached to beams and posts. Clouds, bats, leaves, ghost and pumpkin light move; technology labels stay fixed.</desc>${animated?`<style>${css}</style>`:''}${layer!=='motion'?fixedScene:''}${layer!=='static'?motion(t,animated):''}</svg>`;
+ return `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="img" aria-labelledby="title desc"><title id="title">Minecraft Halloween tech stack</title><desc id="desc">Five bold category signs and twenty fixed pixel-art technology items. ${escape(desc)}. The spider crawls on the shelf, lowers on anchored silk and climbs back with moving legs. Corner webs stay attached to beams and posts. Clouds, bats, leaves, ghost and pumpkin light move; technology labels stay fixed.</desc>${animated?`<style>${css}</style>`:''}${layer!=='motion'?fixedScene:''}${layer!=='static'?motion(t,animated):''}</svg>`;
 }
 await fs.writeFile(path.join(out,'tech-stack.svg'),svg(0,true));
 await fs.writeFile(path.join(out,'tech-stack-static.svg'),svg(0));

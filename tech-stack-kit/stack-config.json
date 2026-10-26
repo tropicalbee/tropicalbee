@@ -66,19 +66,14 @@
       "title": "DATABASES",
       "items": [
         {
-          "label": "Firebase",
-          "icon": "firebase",
-          "iconPath": "source/pixel-icons/firebase.png"
+          "label": "PostgreSQL",
+          "icon": "postgresql",
+          "iconPath": "source/pixel-icons/postgresql.png"
         },
         {
           "label": "ChromaDB",
           "icon": "chromadb",
           "iconPath": "source/pixel-icons/chromadb.png"
-        },
-        {
-          "label": "Supabase",
-          "icon": "supabase",
-          "iconPath": "source/pixel-icons/supabase.png"
         }
       ]
     },
@@ -113,7 +108,7 @@
       ]
     },
     {
-      "title": "AI ASSISTANTS",
+      "title": "AI CODING AGENTS",
       "items": [
         {
           "label": "Claude Code",

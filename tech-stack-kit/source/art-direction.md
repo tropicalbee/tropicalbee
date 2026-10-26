@@ -25,6 +25,10 @@ Create a tall 2:3 version of the supplied outdoor Minecraft display, intended 12
 
 `pixel-icons/claude-code.png` is not generated. It traces the official Claude Code mark (#D97757) onto its own 16 by 10 block grid, drawn 5 pixels per block with lighter top-left and darker bottom-right edge blocks, like the atlas sprites. The eyes remain transparent.
 
+## PostgreSQL sprite
+
+`pixel-icons/postgresql.png` is not generated either. It traces the official PostgreSQL elephant onto 22 by 22 blocks of 4 pixels in #336791 blue, shaded the same way. The logo's white outline strokes become dark navy and dark blue lines, so the sprite has no white border; only the eyes stay light.
+
 ## Assembly
 
-The five readable category signs, twenty-one frames and labels, moon and animations are added in editable source. Ghost and spider assets are shared with the earlier Welcome and Resident sections.
+The five readable category signs, twenty frames and labels, moon and animations are added in editable source. Ghost and spider assets are shared with the earlier Welcome and Resident sections.
