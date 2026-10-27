@@ -45,4 +45,4 @@ No API key is needed to re-render or change the text. The generated background i
 
 ## Source and reuse
 
-The background was edited with the built-in image-generation tool; lettering and animation are editable code. Art direction is recorded in `source/art-direction.md`. Code is MIT licensed. This is an unofficial community design and is not affiliated with Minecraft or Mojang.
+The background was edited with the built-in image-generation tool; lettering and animation are editable code. Art direction is recorded in `source/art-direction.md`. Code is licensed under Apache 2.0; see LICENSE and NOTICE. This is an unofficial community design and is not affiliated with Minecraft or Mojang.

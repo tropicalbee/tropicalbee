@@ -61,7 +61,7 @@ The assembled profile includes a [scheduled GitHub Actions workflow](../.github/
 
 The cave-entrance background was edited with the built-in image-generation tool from the previous room, preserving the Resident palette with much coarser block textures. The ghost uses the exact existing shared sprite. The daily blocks, pickaxe, movement, particles, text and mining counter are code-native. Art direction is recorded in `source/art-direction.md`.
 
-Code is MIT licensed. The animation is a custom mining replay; it does not use Platane/snk's solver or source. This is an unofficial community design and is not affiliated with Minecraft or Mojang.
+Code is licensed under Apache 2.0; see LICENSE and NOTICE. The animation is a custom mining replay; it does not use Platane/snk's solver or source. This is an unofficial community design and is not affiliated with Minecraft or Mojang.
 
 ## Coarse cave revision
 

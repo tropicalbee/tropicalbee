@@ -3,7 +3,7 @@
   "version": "0.2.2",
   "private": true,
   "type": "module",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "scripts": {
     "render": "node source/render-banner.mjs",
     "render:game": "node source/render-adventure.mjs",

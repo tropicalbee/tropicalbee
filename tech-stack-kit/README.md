@@ -95,6 +95,7 @@ file deletion is performed.
 
 ## License
 
-MIT license for the theme and source. Technology names and brand identities
-belong to their respective owners. This is an independent community design;
-the pixel interpretations are not official brand assets.
+Apache 2.0 license for the theme and source; see LICENSE and NOTICE.
+Technology names and brand identities belong to their respective owners. This
+is an independent community design; the pixel interpretations are not official
+brand assets.

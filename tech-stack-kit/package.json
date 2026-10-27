@@ -2,7 +2,7 @@
   "name": "haunted-minecraft-tech-stack",
   "version": "0.3.0",
   "type": "module",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "scripts": {"render": "node source/render-stack.mjs", "prepare:sprites": "node source/prepare-sprites.mjs"},
   "dependencies": {"sharp": "0.35.5"}
 }

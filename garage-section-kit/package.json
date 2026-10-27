@@ -2,7 +2,7 @@
   "name": "minecraft-halloween-garage-brewing",
   "version": "0.3.0",
   "type": "module",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "scripts": {"render": "node source/render-garage.mjs"},
   "dependencies": {"sharp": "0.35.5"}
 }

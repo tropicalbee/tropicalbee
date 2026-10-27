@@ -1,6 +1,7 @@
 {
   "name": "tropicalbee-trespass-register",
   "private": true,
+  "license": "Apache-2.0",
   "type": "module",
   "scripts": {"render": "node source/render-trespasses.mjs"}
 }
