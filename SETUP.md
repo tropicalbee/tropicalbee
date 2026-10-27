@@ -295,3 +295,21 @@ The scheduled workflow installs Sharp in the banner kit on its disposable runner
 and uses the same shared renderer helper. Keep the `scripts/` directory when
 uploading the assembled profile. Rendering the full-size tech stack can use
 around 1 GiB of memory; render the sections sequentially.
+
+## Reuse and credit
+
+The seven kits are licensed under Apache 2.0, so you are welcome to use and
+change them on your own profile:
+
+1. Set `username` in `tropicalbee-halloween-banner-kit/banner-config.json`,
+   `ghost-miner-kit/miner-config.json` and `stats-section-kit/stats-config.json`.
+2. Search the files for `tropicalbee` and replace it with your username where it
+   names the account: the links in `README.md`, `excludedLanguageRepositories`,
+   the repository check in `.github/workflows/refresh-profile.yml` and the kit
+   source files. Folder names such as `tropicalbee-halloween-banner-kit` can stay.
+3. Re-render the sections, then follow the steps above to publish them.
+
+Keep each kit's `LICENSE` and `NOTICE` files, and note in any file you change
+that you modified it. Please show your own name on your profile rather than
+tropicalbee's. A link back to [tropicalbee](https://github.com/tropicalbee) is
+appreciated but not required.

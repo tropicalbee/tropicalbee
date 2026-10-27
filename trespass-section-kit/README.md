@@ -31,3 +31,5 @@ while footprints, lantern light and eyes move. The source artwork is unchanged.
 Keep the shared `scripts/` folder and `garage-section-kit/source/pixel-font.mjs`.
 The exact background-generation prompt is in `source/art-prompt.json`.
 The artwork is Minecraft-inspired, not an actual screenshot from the game.
+
+Apache 2.0 licensed; see `LICENSE`, `NOTICE` and "Reuse and credit" in the root `SETUP.md`.

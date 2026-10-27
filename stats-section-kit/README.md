@@ -75,3 +75,5 @@ screenshot. The exact generation prompt is in `source/art-prompt-v2.json`.
 Sources: [GitHub repository/language API](https://docs.github.com/en/rest/repos/repos#list-repository-languages),
 [GitHub issue/PR search API](https://docs.github.com/en/rest/search/search#search-issues-and-pull-requests),
 and the account's public profile calendar.
+
+Apache 2.0 licensed; see `LICENSE`, `NOTICE` and "Reuse and credit" in the root `SETUP.md`.
