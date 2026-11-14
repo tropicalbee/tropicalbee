@@ -1,13 +1,13 @@
 {
   "schemaVersion": 1,
   "username": "tropicalbee",
-  "fetchedAt": "2026-11-14T13:44:11+00:00",
+  "fetchedAt": "2026-11-14T22:38:51+00:00",
   "period": {
     "start": "2025-11-15",
     "end": "2026-11-14"
   },
   "metrics": {
-    "repositories": 4,
+    "repositories": 5,
     "stars": 3,
     "issues": 1,
     "pullRequests": 2,
@@ -21,25 +21,42 @@
       "bytes": 1188955
     },
     {
+      "name": "Python",
+      "bytes": 1083442
+    },
+    {
       "name": "JavaScript",
-      "bytes": 493428
+      "bytes": 508624
+    },
+    {
+      "name": "TypeScript",
+      "bytes": 322242
     },
     {
       "name": "CSS",
-      "bytes": 82811
+      "bytes": 128943
     },
     {
       "name": "HTML",
-      "bytes": 12576
+      "bytes": 47084
     },
     {
-      "name": "Python",
-      "bytes": 6725
+      "name": "Dockerfile",
+      "bytes": 1854
+    },
+    {
+      "name": "PowerShell",
+      "bytes": 1285
+    },
+    {
+      "name": "Shell",
+      "bytes": 1180
     }
   ],
   "languageRepositories": [
     "tropicalbee/DekhoEML",
     "tropicalbee/EDA_Using_Bivariate_And_Multivariate_Analysis",
+    "tropicalbee/GhostShopper",
     "tropicalbee/Moonbase-Intern"
   ],
   "excludedLanguageRepositories": [
