@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
   "username": "tropicalbee",
-  "fetchedAt": "2026-11-21T23:30:43+00:00",
+  "fetchedAt": "2026-11-22T14:47:37+00:00",
   "period": {
-    "start": "2025-11-22",
-    "end": "2026-11-21"
+    "start": "2025-11-23",
+    "end": "2026-11-22"
   },
   "metrics": {
     "repositories": 5,
