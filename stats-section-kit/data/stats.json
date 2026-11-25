@@ -1,48 +1,48 @@
 {
   "schemaVersion": 1,
   "username": "tropicalbee",
-  "fetchedAt": "2026-11-25T02:41:03+00:00",
+  "fetchedAt": "2026-11-25T17:31:04+00:00",
   "period": {
     "start": "2025-11-26",
     "end": "2026-11-25"
   },
   "metrics": {
-    "repositories": 5,
+    "repositories": 6,
     "stars": 3,
     "issues": 1,
     "pullRequests": 2,
     "mergedPullRequests": 2,
-    "contributions": 883,
+    "contributions": 890,
     "longestStreak": 20
   },
   "languages": [
+    {
+      "name": "Python",
+      "bytes": 1797983
+    },
     {
       "name": "Jupyter Notebook",
       "bytes": 1188955
     },
     {
-      "name": "Python",
-      "bytes": 1083442
-    },
-    {
       "name": "JavaScript",
-      "bytes": 492603
+      "bytes": 493271
     },
     {
       "name": "TypeScript",
-      "bytes": 322242
+      "bytes": 428816
     },
     {
       "name": "CSS",
-      "bytes": 121873
+      "bytes": 156425
     },
     {
       "name": "HTML",
-      "bytes": 47408
+      "bytes": 47992
     },
     {
       "name": "Dockerfile",
-      "bytes": 1854
+      "bytes": 3354
     },
     {
       "name": "PowerShell",
@@ -57,7 +57,8 @@
     "tropicalbee/DekhoEML",
     "tropicalbee/EDA_Using_Bivariate_And_Multivariate_Analysis",
     "tropicalbee/GhostShopper",
-    "tropicalbee/Moonbase-Intern"
+    "tropicalbee/Moonbase-Intern",
+    "tropicalbee/WorksFr"
   ],
   "excludedLanguageRepositories": [
     "tropicalbee/tropicalbee"
